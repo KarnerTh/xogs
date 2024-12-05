@@ -8,8 +8,8 @@ import (
 )
 
 var (
-	headerStyle  = lipgloss.NewStyle().Align(lipgloss.Center).Background(lipgloss.Color(20))
-	inputStyle   = lipgloss.NewStyle().Align(lipgloss.Left).Background(lipgloss.Color(40)).Border(lipgloss.RoundedBorder())
+	headerStyle  = lipgloss.NewStyle().Align(lipgloss.Center)
+	inputStyle   = lipgloss.NewStyle().Align(lipgloss.Left).Border(lipgloss.RoundedBorder())
 	contentStyle = lipgloss.NewStyle().Align(lipgloss.Left, lipgloss.Top)
 )
 
@@ -19,6 +19,7 @@ type InputTest struct {
 
 type model struct {
 	isQuitting    bool
+	follow        bool
 	width, height int
 	table         table.Model
 	input         textinput.Model
@@ -73,6 +74,10 @@ func (m model) handleKeyPress(msg tea.KeyMsg) (model, tea.Cmd, bool) {
 			m.table.Focus()
 			m.input.Blur()
 		}
+	case "up", "k":
+		m.follow = false
+	case "end", "G":
+		m.follow = true
 	}
 
 	return m, nil, preventPropergation
@@ -83,7 +88,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case InputTest:
 		m.table.SetRows(append(m.table.Rows(), table.Row{"tbd", msg.Msg}))
-		m.table.GotoBottom()
+		if m.follow {
+			m.table.GotoBottom()
+		}
 	case tea.WindowSizeMsg:
 		m = m.updateSizes(msg)
 	case tea.KeyMsg:
@@ -141,5 +148,5 @@ func CreateRootProgram() *tea.Program {
 	input := textinput.New()
 	input.Placeholder = "search and filter"
 
-	return tea.NewProgram(model{table: t, input: input})
+	return tea.NewProgram(model{table: t, input: input, follow: true})
 }

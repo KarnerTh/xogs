@@ -6,3 +6,7 @@ run:
 .PHONY: test
 test:
 	go test ./... -json | tparse -all
+
+.PHONY: test-cleanup
+test-cleanup:
+	go clean -testcache
