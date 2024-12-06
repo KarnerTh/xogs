@@ -5,7 +5,8 @@ import (
 	"log/slog"
 	"os"
 
-	"github.com/KarnerTh/xogs/internal/extract"
+	"github.com/KarnerTh/xogs/internal/aggregator"
+	"github.com/KarnerTh/xogs/internal/parser"
 	"github.com/KarnerTh/xogs/internal/view"
 	"github.com/spf13/cobra"
 )
@@ -21,12 +22,14 @@ var rootCmd = &cobra.Command{
 		// defer f.Close()
 
 		p := view.CreateRootProgram()
-		inputSubscriber := extract.GetInputSubscriber().Subscribe()
+		// TODO: error handling
+		parser, _ := parser.GetParser(parser.ParserCurl)
+		logSubscriber := aggregator.Aggregate(parser).Subscribe()
 
 		go func() {
 			for {
-				input := <-inputSubscriber
-				p.Send(view.InputTest{Msg: input.Value})
+				log := <-logSubscriber
+				p.Send(log)
 			}
 
 		}()

@@ -1,6 +1,7 @@
 package view
 
 import (
+	"github.com/KarnerTh/xogs/internal/aggregator"
 	"github.com/charmbracelet/bubbles/table"
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
@@ -12,10 +13,6 @@ var (
 	inputStyle   = lipgloss.NewStyle().Align(lipgloss.Left).Border(lipgloss.RoundedBorder())
 	contentStyle = lipgloss.NewStyle().Align(lipgloss.Left, lipgloss.Top)
 )
-
-type InputTest struct {
-	Msg string
-}
 
 type model struct {
 	isQuitting    bool
@@ -86,8 +83,8 @@ func (m model) handleKeyPress(msg tea.KeyMsg) (model, tea.Cmd, bool) {
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
 	switch msg := msg.(type) {
-	case InputTest:
-		m.table.SetRows(append(m.table.Rows(), table.Row{"tbd", msg.Msg}))
+	case aggregator.Log:
+		m.table.SetRows(append(m.table.Rows(), table.Row{msg.Timestamp.Format("15:04:05.000"), msg.Msg}))
 		if m.follow {
 			m.table.GotoBottom()
 		}

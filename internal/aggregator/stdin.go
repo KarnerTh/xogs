@@ -1,4 +1,4 @@
-package extract
+package aggregator
 
 import (
 	"bufio"
@@ -9,19 +9,18 @@ import (
 	"github.com/KarnerTh/xogs/internal/observer"
 )
 
-type InputData struct {
+var inputNotifier = observer.New[Input]()
+
+type Input struct {
 	Timestamp time.Time
 	Value     string
 }
 
-var inputNotifier = observer.New[InputData]()
-
-func GetInputSubscriber() observer.Subscriber[InputData] {
-	if !hasStdinContent() {
-		return nil
+func getInputSubscriber() observer.Subscriber[Input] {
+	if hasStdinContent() {
+		go readFromStdin()
 	}
 
-	go readFromStdin()
 	return inputNotifier
 }
 
@@ -29,7 +28,7 @@ func readFromStdin() {
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
 		line := scanner.Text()
-		inputNotifier.Publish(InputData{Timestamp: time.Now(), Value: line})
+		inputNotifier.Publish(Input{Timestamp: time.Now(), Value: line})
 	}
 
 	if err := scanner.Err(); err != nil {
