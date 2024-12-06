@@ -84,7 +84,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
 	switch msg := msg.(type) {
 	case aggregator.Log:
-		m.table.SetRows(append(m.table.Rows(), table.Row{msg.Timestamp.Format("15:04:05.000"), msg.Msg}))
+		m.table.SetRows(append(m.table.Rows(), table.Row{msg.Timestamp.Format("15:04:05.000"), msg.Data["time"], msg.Msg}))
 		if m.follow {
 			m.table.GotoBottom()
 		}
@@ -122,6 +122,7 @@ func (m model) View() string {
 func CreateRootProgram() *tea.Program {
 	columns := []table.Column{
 		{Title: "timestamp", Width: 4},
+		{Title: "time", Width: 4},
 		{Title: "log", Width: 10},
 	}
 

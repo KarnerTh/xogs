@@ -5,13 +5,13 @@ import "github.com/KarnerTh/xogs/internal/aggregator"
 type Parser = int
 
 const (
-	ParserCurl Parser = iota
+	ParserPing Parser = iota
 )
 
 func GetParser(parser Parser) (aggregator.LineParser, error) {
 	switch parser {
-	case ParserCurl:
-		return newCurlParser(), nil
+	case ParserPing:
+		return newPingParser(), nil
 	default:
 		return nil, nil
 	}

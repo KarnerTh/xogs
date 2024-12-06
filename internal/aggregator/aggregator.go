@@ -22,7 +22,7 @@ type Log struct {
 	Timestamp time.Time
 	Level     Level
 	Msg       string
-	Data      map[string]any
+	Data      map[string]string
 }
 
 type LineParser interface {
@@ -39,7 +39,6 @@ func Aggregate(parser LineParser) observer.Subscriber[Log] {
 			log, _ := parser.Parse(input)
 
 			logNotifier.Publish(*log)
-			// p.Send(view.InputTest{Msg: input.Value})
 		}
 
 	}()

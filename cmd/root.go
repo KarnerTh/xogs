@@ -23,7 +23,7 @@ var rootCmd = &cobra.Command{
 
 		p := view.CreateRootProgram()
 		// TODO: error handling
-		parser, _ := parser.GetParser(parser.ParserCurl)
+		parser, _ := parser.GetParser(parser.ParserPing)
 		logSubscriber := aggregator.Aggregate(parser).Subscribe()
 
 		go func() {
