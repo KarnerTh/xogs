@@ -1,12 +1,14 @@
 package aggregator
 
 import (
+	"strings"
 	"time"
 
 	"github.com/KarnerTh/xogs/internal/observer"
 )
 
-var logNotifier = observer.New[Log]()
+var logNotifier = observer.New[Notification]()
+var filterNotifier = observer.New[string]()
 
 type Level int
 
@@ -25,23 +27,69 @@ type Log struct {
 	Data      map[string]string
 }
 
+type Notification struct {
+	NewEntry *Log
+	BaseList []Log
+}
+
 type LineParser interface {
 	Parse(input Input) (*Log, error)
 }
 
-func Aggregate(parser LineParser) observer.Subscriber[Log] {
-	inputSubscriber := getInputSubscriber().Subscribe()
+type LogRepository interface {
+	Add(log Log) error
+	GetAll() []Log
+}
+
+type Aggregator struct {
+	parser LineParser
+	repo   LogRepository
+	filter string
+}
+
+func NewAggregator(lineParser LineParser, logRepository LogRepository) Aggregator {
+	return Aggregator{
+		parser: lineParser,
+		repo:   logRepository,
+	}
+}
+
+func (a *Aggregator) Aggregate() (observer.Subscriber[Notification], observer.Publisher[string]) {
+	inputSubscription := getInputSubscriber().Subscribe()
+	filterSubscription := filterNotifier.Subscribe()
 
 	go func() {
 		for {
-			input := <-inputSubscriber
-			// TODO: handle error
-			log, _ := parser.Parse(input)
+			select {
+			case input := <-inputSubscription:
+				// TODO: handle error
+				log, _ := a.parser.Parse(input)
+				a.repo.Add(*log)
 
-			logNotifier.Publish(*log)
+				if checkLogFilter(*log, a.filter) {
+					logNotifier.Publish(Notification{NewEntry: log})
+				}
+			case filter := <-filterSubscription:
+				a.filter = filter
+				if len(filter) == 0 {
+					logNotifier.Publish(Notification{BaseList: a.repo.GetAll()})
+					continue
+				}
+
+				logList := []Log{}
+				for _, v := range a.repo.GetAll() {
+					if checkLogFilter(v, filter) {
+						logList = append(logList, v)
+					}
+				}
+				logNotifier.Publish(Notification{BaseList: logList})
+			}
 		}
-
 	}()
 
-	return logNotifier
+	return logNotifier, filterNotifier
+}
+
+func checkLogFilter(log Log, filter string) bool {
+	return strings.Contains(log.Msg, filter)
 }

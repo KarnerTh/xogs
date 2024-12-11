@@ -2,6 +2,7 @@ package view
 
 import (
 	"github.com/KarnerTh/xogs/internal/aggregator"
+	"github.com/KarnerTh/xogs/internal/observer"
 	"github.com/charmbracelet/bubbles/table"
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
@@ -15,11 +16,12 @@ var (
 )
 
 type model struct {
-	isQuitting    bool
-	follow        bool
-	width, height int
-	table         table.Model
-	input         textinput.Model
+	filterPublisher observer.Publisher[string]
+	isQuitting      bool
+	follow          bool
+	width, height   int
+	table           table.Model
+	input           textinput.Model
 }
 
 func (m model) Init() tea.Cmd {
@@ -83,8 +85,22 @@ func (m model) handleKeyPress(msg tea.KeyMsg) (model, tea.Cmd, bool) {
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
 	switch msg := msg.(type) {
-	case aggregator.Log:
-		m.table.SetRows(append(m.table.Rows(), table.Row{msg.Timestamp.Format("15:04:05.000"), msg.Data["time"], msg.Msg}))
+	case aggregator.Notification:
+		if msg.NewEntry != nil {
+			m.table.SetRows(append(m.table.Rows(), table.Row{
+				msg.NewEntry.Timestamp.Format("15:04:05.000"),
+				msg.NewEntry.Data["time"],
+				msg.NewEntry.Msg,
+			}))
+		} else if msg.BaseList != nil {
+			rows := make([]table.Row, len(msg.BaseList))
+			for i, v := range msg.BaseList {
+				rows[i] = table.Row{v.Timestamp.Format("15:04:05.000"), v.Data["time"], v.Msg}
+			}
+			m.table.SetRows(rows)
+			m.table.GotoBottom()
+		}
+
 		if m.follow {
 			m.table.GotoBottom()
 		}
@@ -99,8 +115,13 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m = model
 	}
 
+	input, cmd := m.input.Update(msg)
+	if input.Value() != m.input.Value() {
+		m.filterPublisher.Publish(input.Value())
+	}
+	m.input = input
+
 	m.table, cmd = m.table.Update(msg)
-	m.input, cmd = m.input.Update(msg)
 	return m, cmd
 }
 
@@ -119,7 +140,7 @@ func (m model) View() string {
 	return lipgloss.JoinVertical(lipgloss.Top, header, content, input)
 }
 
-func CreateRootProgram() *tea.Program {
+func CreateRootProgram(filter observer.Publisher[string]) *tea.Program {
 	columns := []table.Column{
 		{Title: "timestamp", Width: 4},
 		{Title: "time", Width: 4},
@@ -146,5 +167,5 @@ func CreateRootProgram() *tea.Program {
 	input := textinput.New()
 	input.Placeholder = "search and filter"
 
-	return tea.NewProgram(model{table: t, input: input, follow: true})
+	return tea.NewProgram(model{table: t, input: input, follow: true, filterPublisher: filter})
 }
