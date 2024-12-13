@@ -10,9 +10,8 @@ import (
 )
 
 var (
-	headerStyle  = lipgloss.NewStyle().Align(lipgloss.Center)
 	inputStyle   = lipgloss.NewStyle().Align(lipgloss.Left).Border(lipgloss.RoundedBorder())
-	contentStyle = lipgloss.NewStyle().Align(lipgloss.Left, lipgloss.Top)
+	contentStyle = lipgloss.NewStyle().Align(lipgloss.Left, lipgloss.Top).PaddingTop(1)
 )
 
 type model struct {
@@ -130,14 +129,13 @@ func (m model) View() string {
 		return ""
 	}
 
-	header := headerStyle.Width(m.width).Render("header")
 	input := inputStyle.Width(m.width - 2).Render(m.input.View())
 	content := contentStyle.
 		Width(m.width).
-		Height(m.height - 4).
+		Height(m.height - 3).
 		Render(lipgloss.JoinHorizontal(lipgloss.Bottom, m.table.View()))
 
-	return lipgloss.JoinVertical(lipgloss.Top, header, content, input)
+	return lipgloss.JoinVertical(lipgloss.Top, content, input)
 }
 
 func CreateRootProgram(filter observer.Publisher[string]) *tea.Program {
