@@ -1,7 +1,6 @@
 package aggregator
 
 import (
-	"strings"
 	"time"
 
 	"github.com/KarnerTh/xogs/internal/observer"
@@ -13,7 +12,7 @@ var filterNotifier = observer.New[string]()
 type Level int
 
 const (
-	LevelUnknown Level = iota
+	LevelNone Level = iota
 	LevelDebug
 	LevelInfo
 	LevelWarn
@@ -88,8 +87,4 @@ func (a *Aggregator) Aggregate() (observer.Subscriber[Notification], observer.Pu
 	}()
 
 	return logNotifier, filterNotifier
-}
-
-func checkLogFilter(log Log, filter string) bool {
-	return strings.Contains(log.Msg, filter)
 }

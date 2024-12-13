@@ -22,7 +22,7 @@ func (p curlParser) Parse(input aggregator.Input) (*aggregator.Log, error) {
 	}
 
 	return &aggregator.Log{
-		Level:     aggregator.LevelUnknown,
+		Level:     aggregator.LevelNone,
 		Timestamp: input.Timestamp,
 		Msg:       input.Value,
 		Data:      data,
