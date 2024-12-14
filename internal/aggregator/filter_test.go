@@ -66,7 +66,7 @@ func TestFilter(t *testing.T) {
 	t.Run("Empty filter should match", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
-		log := Log{Msg: "unit test msg"}
+		log := Log{Original: "unit test msg"}
 		input := ""
 
 		// Act
@@ -81,7 +81,7 @@ func TestFilter(t *testing.T) {
 		t.Run("log matches", func(t *testing.T) {
 			t.Parallel()
 			// Arrange
-			log := Log{Msg: "unit test msg"}
+			log := Log{Original: "unit test msg"}
 			input := "unit"
 
 			// Act
@@ -94,7 +94,7 @@ func TestFilter(t *testing.T) {
 		t.Run("log does not match", func(t *testing.T) {
 			t.Parallel()
 			// Arrange
-			log := Log{Msg: "unit test msg"}
+			log := Log{Original: "unit test msg"}
 			input := "shouldFail"
 
 			// Act
@@ -110,7 +110,7 @@ func TestFilter(t *testing.T) {
 		t.Run("data matches", func(t *testing.T) {
 			t.Parallel()
 			// Arrange
-			log := Log{Data: map[string]string{"dataA": "works"}}
+			log := Log{Data: map[string]any{"dataA": "works"}}
 			input := "dataA:works"
 
 			// Act
@@ -123,7 +123,7 @@ func TestFilter(t *testing.T) {
 		t.Run("data does not match", func(t *testing.T) {
 			t.Parallel()
 			// Arrange
-			log := Log{Data: map[string]string{"dataA": "works"}}
+			log := Log{Data: map[string]any{"dataA": "works"}}
 			input := "dataA:shouldFail"
 
 			// Act
@@ -136,7 +136,7 @@ func TestFilter(t *testing.T) {
 		t.Run("unknown data does not match", func(t *testing.T) {
 			t.Parallel()
 			// Arrange
-			log := Log{Data: map[string]string{"dataA": "works"}}
+			log := Log{Data: map[string]any{"dataA": "works"}}
 			input := "shouldFail:works"
 
 			// Act

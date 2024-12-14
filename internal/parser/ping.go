@@ -13,18 +13,17 @@ func newPingParser() curlParser {
 }
 
 func (p curlParser) Parse(input aggregator.Input) (*aggregator.Log, error) {
-	timePattern := regexp.MustCompile("time=(?P<time>.*)")
-	matches := timePattern.FindStringSubmatch(input.Value)
+	pattern := regexp.MustCompile("time=(?P<time>.*)")
+	matches := pattern.FindStringSubmatch(input.Value)
 
-	data := map[string]string{}
+	data := map[string]any{"timestamp": input.Timestamp}
+
 	if matches != nil {
-		data["time"] = matches[timePattern.SubexpIndex("time")]
+		data["time"] = matches[pattern.SubexpIndex("time")]
 	}
 
 	return &aggregator.Log{
-		Level:     aggregator.LevelNone,
-		Timestamp: input.Timestamp,
-		Msg:       input.Value,
-		Data:      data,
+		Original: input.Value,
+		Data:     data,
 	}, nil
 }

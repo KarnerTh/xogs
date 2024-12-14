@@ -3,15 +3,12 @@ package aggregator
 import "strings"
 
 type filter struct {
-	level        Level
 	stringTokens []string
 	dataTokens   map[string]string
 }
 
 func (f filter) isEmpty() bool {
-	return f.level == LevelNone &&
-		len(f.stringTokens) == 0 &&
-		len(f.dataTokens) == 0
+	return len(f.stringTokens) == 0 && len(f.dataTokens) == 0
 }
 
 func tokenize(input string) filter {
@@ -37,7 +34,6 @@ func tokenize(input string) filter {
 	}
 
 	return filter{
-		level:        LevelNone, // TODO: parse level
 		stringTokens: stringTokens,
 		dataTokens:   dataTokens,
 	}
@@ -47,12 +43,13 @@ func checkLogFilter(log Log, input string) bool {
 	filter := tokenize(input)
 
 	for _, v := range filter.stringTokens {
-		if strings.Contains(log.Msg, v) {
+		if strings.Contains(log.Original, v) {
 			return true
 		}
 	}
 
 	for k, v := range filter.dataTokens {
+		// TODO: check for type and do fuzzy search
 		if log.Data[k] == v {
 			return true
 		}

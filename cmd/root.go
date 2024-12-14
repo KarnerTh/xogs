@@ -24,7 +24,7 @@ var rootCmd = &cobra.Command{
 		defer f.Close()
 
 		// TODO: error handling
-		parser, _ := parser.GetParser(parser.ParserPing)
+		parser, _ := parser.GetParser(parser.ParserLogfmt)
 		logRepo := persistence.NewInMemory()
 		aggregator := aggregator.NewAggregator(parser, logRepo)
 		logSubscriber, filterPublisher := aggregator.Aggregate()

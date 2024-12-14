@@ -85,16 +85,73 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
 	switch msg := msg.(type) {
 	case aggregator.Notification:
+		// TODO: refactore to be not static
 		if msg.NewEntry != nil {
-			m.table.SetRows(append(m.table.Rows(), table.Row{
-				msg.NewEntry.Timestamp.Format("15:04:05.000"),
-				msg.NewEntry.Data["time"],
-				msg.NewEntry.Msg,
-			}))
+			row := table.Row{}
+
+			level, ok := msg.NewEntry.Data["level"]
+			if ok {
+				row = append(row, level.(string))
+			} else {
+				row = append(row, "")
+			}
+
+			tag, ok := msg.NewEntry.Data["tag"]
+			if ok {
+				row = append(row, tag.(string))
+			} else {
+				row = append(row, "")
+			}
+
+			env, ok := msg.NewEntry.Data["env"]
+			if ok {
+				row = append(row, env.(string))
+			} else {
+				row = append(row, "")
+			}
+
+			msg, ok := msg.NewEntry.Data["msg"]
+			if ok {
+				row = append(row, msg.(string))
+			} else {
+				row = append(row, "")
+			}
+
+			m.table.SetRows(append(m.table.Rows(), row))
 		} else if msg.BaseList != nil {
 			rows := make([]table.Row, len(msg.BaseList))
 			for i, v := range msg.BaseList {
-				rows[i] = table.Row{v.Timestamp.Format("15:04:05.000"), v.Data["time"], v.Msg}
+				row := table.Row{}
+
+				level, ok := v.Data["level"]
+				if ok {
+					row = append(row, level.(string))
+				} else {
+					row = append(row, "")
+				}
+
+				tag, ok := v.Data["tag"]
+				if ok {
+					row = append(row, tag.(string))
+				} else {
+					row = append(row, "")
+				}
+
+				env, ok := v.Data["env"]
+				if ok {
+					row = append(row, env.(string))
+				} else {
+					row = append(row, "")
+				}
+
+				msg, ok := v.Data["msg"]
+				if ok {
+					row = append(row, msg.(string))
+				} else {
+					row = append(row, "")
+				}
+
+				rows[i] = row
 			}
 			m.table.SetRows(rows)
 			m.table.GotoBottom()
@@ -140,9 +197,10 @@ func (m model) View() string {
 
 func CreateRootProgram(filter observer.Publisher[string]) *tea.Program {
 	columns := []table.Column{
-		{Title: "timestamp", Width: 4},
-		{Title: "time", Width: 4},
-		{Title: "log", Width: 10},
+		{Title: "level", Width: 4},
+		{Title: "tag", Width: 4},
+		{Title: "env", Width: 4},
+		{Title: "msg", Width: 10},
 	}
 
 	t := table.New(

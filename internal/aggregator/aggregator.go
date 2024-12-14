@@ -1,8 +1,6 @@
 package aggregator
 
 import (
-	"time"
-
 	"github.com/KarnerTh/xogs/internal/observer"
 )
 
@@ -20,10 +18,8 @@ const (
 )
 
 type Log struct {
-	Timestamp time.Time
-	Level     Level
-	Msg       string
-	Data      map[string]string
+	Data     map[string]any
+	Original string
 }
 
 type Notification struct {
