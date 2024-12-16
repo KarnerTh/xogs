@@ -26,12 +26,44 @@ var rootCmd = &cobra.Command{
 		// TODO: error handling
 		parser, _ := parser.GetParser(parser.ParserLogfmt)
 		logRepo := persistence.NewInMemory()
-		aggregator := aggregator.NewAggregator(parser, logRepo)
-		logSubscriber, filterPublisher := aggregator.Aggregate()
+		agg := aggregator.NewAggregator(parser, logRepo)
+		logSubscriber, filterPublisher := agg.Aggregate()
 		logSubscription := logSubscriber.Subscribe()
 
-		p := view.CreateRootProgram(filterPublisher)
+		displayConfig := view.DisplayConfig{
+			Columns: []view.ColumnConfig{
+				{
+					Title: "level",
+					Width: 5,
+					Value: func(log aggregator.Log) string {
+						return log.GetStringData("level")
+					},
+				},
+				{
+					Title: "tag",
+					Width: 5,
+					Value: func(log aggregator.Log) string {
+						return log.GetStringData("tag")
+					},
+				},
+				{
+					Title: "env",
+					Width: 5,
+					Value: func(log aggregator.Log) string {
+						return log.GetStringData("env")
+					},
+				},
+				{
+					Title: "msg",
+					Width: 5,
+					Value: func(log aggregator.Log) string {
+						return log.GetStringData("msg")
+					},
+				},
+			},
+		}
 
+		p := view.CreateRootProgram(displayConfig, filterPublisher)
 		go func() {
 			for {
 				notification := <-logSubscription

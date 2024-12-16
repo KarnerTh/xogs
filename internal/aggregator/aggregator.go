@@ -7,21 +7,6 @@ import (
 var logNotifier = observer.New[Notification]()
 var filterNotifier = observer.New[string]()
 
-type Level int
-
-const (
-	LevelNone Level = iota
-	LevelDebug
-	LevelInfo
-	LevelWarn
-	LevelError
-)
-
-type Log struct {
-	Data     map[string]any
-	Original string
-}
-
 type Notification struct {
 	NewEntry *Log
 	BaseList []Log

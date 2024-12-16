@@ -15,12 +15,23 @@ var (
 )
 
 type model struct {
+	displayConfig   DisplayConfig
 	filterPublisher observer.Publisher[string]
 	isQuitting      bool
 	follow          bool
 	width, height   int
 	table           table.Model
 	input           textinput.Model
+}
+
+type ColumnConfig struct {
+	Title string
+	Width int
+	Value func(log aggregator.Log) string
+}
+
+type DisplayConfig struct {
+	Columns []ColumnConfig
 }
 
 func (m model) Init() tea.Cmd {
@@ -85,73 +96,13 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
 	switch msg := msg.(type) {
 	case aggregator.Notification:
-		// TODO: refactore to be not static
 		if msg.NewEntry != nil {
-			row := table.Row{}
-
-			level, ok := msg.NewEntry.Data["level"]
-			if ok {
-				row = append(row, level.(string))
-			} else {
-				row = append(row, "")
-			}
-
-			tag, ok := msg.NewEntry.Data["tag"]
-			if ok {
-				row = append(row, tag.(string))
-			} else {
-				row = append(row, "")
-			}
-
-			env, ok := msg.NewEntry.Data["env"]
-			if ok {
-				row = append(row, env.(string))
-			} else {
-				row = append(row, "")
-			}
-
-			msg, ok := msg.NewEntry.Data["msg"]
-			if ok {
-				row = append(row, msg.(string))
-			} else {
-				row = append(row, "")
-			}
-
+			row := mapLogToRow(m.displayConfig, *msg.NewEntry)
 			m.table.SetRows(append(m.table.Rows(), row))
 		} else if msg.BaseList != nil {
 			rows := make([]table.Row, len(msg.BaseList))
 			for i, v := range msg.BaseList {
-				row := table.Row{}
-
-				level, ok := v.Data["level"]
-				if ok {
-					row = append(row, level.(string))
-				} else {
-					row = append(row, "")
-				}
-
-				tag, ok := v.Data["tag"]
-				if ok {
-					row = append(row, tag.(string))
-				} else {
-					row = append(row, "")
-				}
-
-				env, ok := v.Data["env"]
-				if ok {
-					row = append(row, env.(string))
-				} else {
-					row = append(row, "")
-				}
-
-				msg, ok := v.Data["msg"]
-				if ok {
-					row = append(row, msg.(string))
-				} else {
-					row = append(row, "")
-				}
-
-				rows[i] = row
+				rows[i] = mapLogToRow(m.displayConfig, v)
 			}
 			m.table.SetRows(rows)
 			m.table.GotoBottom()
@@ -181,6 +132,15 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, cmd
 }
 
+func mapLogToRow(displayConfig DisplayConfig, log aggregator.Log) table.Row {
+	row := make(table.Row, len(displayConfig.Columns))
+	for i, v := range displayConfig.Columns {
+		row[i] = v.Value(log)
+	}
+
+	return row
+}
+
 func (m model) View() string {
 	if m.isQuitting {
 		return ""
@@ -195,12 +155,13 @@ func (m model) View() string {
 	return lipgloss.JoinVertical(lipgloss.Top, content, input)
 }
 
-func CreateRootProgram(filter observer.Publisher[string]) *tea.Program {
-	columns := []table.Column{
-		{Title: "level", Width: 4},
-		{Title: "tag", Width: 4},
-		{Title: "env", Width: 4},
-		{Title: "msg", Width: 10},
+func CreateRootProgram(displayConfig DisplayConfig, filter observer.Publisher[string]) *tea.Program {
+	columns := make([]table.Column, len(displayConfig.Columns))
+	for i, v := range displayConfig.Columns {
+		columns[i] = table.Column{
+			Title: v.Title,
+			Width: 1,
+		}
 	}
 
 	t := table.New(
@@ -223,5 +184,11 @@ func CreateRootProgram(filter observer.Publisher[string]) *tea.Program {
 	input := textinput.New()
 	input.Placeholder = "search and filter"
 
-	return tea.NewProgram(model{table: t, input: input, follow: true, filterPublisher: filter})
+	return tea.NewProgram(model{
+		displayConfig:   displayConfig,
+		table:           t,
+		input:           input,
+		follow:          true,
+		filterPublisher: filter,
+	})
 }
