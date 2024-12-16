@@ -26,7 +26,7 @@ type model struct {
 
 type ColumnConfig struct {
 	Title string
-	Width int
+	Width float32
 	Value func(log aggregator.Log) string
 }
 
@@ -46,7 +46,7 @@ func (m model) updateSizes(msg tea.WindowSizeMsg) model {
 
 	var cols = m.table.Columns()
 	for i, v := range cols {
-		v.Width = m.width/len(cols) - 2
+		v.Width = int(float32(m.width)*m.displayConfig.Columns[i].Width - 2)
 		cols[i] = v
 	}
 

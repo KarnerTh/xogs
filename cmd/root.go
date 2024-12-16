@@ -34,28 +34,28 @@ var rootCmd = &cobra.Command{
 			Columns: []view.ColumnConfig{
 				{
 					Title: "level",
-					Width: 5,
+					Width: 0.1,
 					Value: func(log aggregator.Log) string {
 						return log.GetStringData("level")
 					},
 				},
 				{
 					Title: "tag",
-					Width: 5,
+					Width: 0.1,
 					Value: func(log aggregator.Log) string {
 						return log.GetStringData("tag")
 					},
 				},
 				{
 					Title: "env",
-					Width: 5,
+					Width: 0.1,
 					Value: func(log aggregator.Log) string {
 						return log.GetStringData("env")
 					},
 				},
 				{
 					Title: "msg",
-					Width: 5,
+					Width: 0.7,
 					Value: func(log aggregator.Log) string {
 						return log.GetStringData("msg")
 					},
