@@ -146,5 +146,46 @@ func TestFilter(t *testing.T) {
 			assert.False(t, found)
 		})
 
+		t.Run("partial data token does match", func(t *testing.T) {
+			t.Parallel()
+			// Arrange
+			log := Log{Data: map[string]any{"dataA": "someLongValue"}}
+			input := "dataA:some"
+
+			// Act
+			found := checkLogFilter(log, input)
+
+			// Assert
+			assert.True(t, found)
+		})
+	})
+
+	t.Run("Filter multiple data tokens", func(t *testing.T) {
+		t.Parallel()
+		t.Run("two matching tokens matches", func(t *testing.T) {
+			t.Parallel()
+			// Arrange
+			log := Log{Data: map[string]any{"dataA": "works", "dataB": "works"}}
+			input := "dataA:works dataB:works"
+
+			// Act
+			found := checkLogFilter(log, input)
+
+			// Assert
+			assert.True(t, found)
+		})
+
+		t.Run("one of two matching tokens does not match", func(t *testing.T) {
+			t.Parallel()
+			// Arrange
+			log := Log{Data: map[string]any{"dataA": "works", "dataB": "works"}}
+			input := "dataA:works dataB:shouldFail"
+
+			// Act
+			found := checkLogFilter(log, input)
+
+			// Assert
+			assert.False(t, found)
+		})
 	})
 }

@@ -7,10 +7,6 @@ type filter struct {
 	dataTokens   map[string]string
 }
 
-func (f filter) isEmpty() bool {
-	return len(f.stringTokens) == 0 && len(f.dataTokens) == 0
-}
-
 func tokenize(input string) filter {
 	tokens := strings.Split(input, " ")
 	stringTokens := []string{}
@@ -41,19 +37,20 @@ func tokenize(input string) filter {
 
 func checkLogFilter(log Log, input string) bool {
 	filter := tokenize(input)
+	match := true
 
 	for _, v := range filter.stringTokens {
-		if strings.Contains(log.Original, v) {
-			return true
-		}
+		match = match && strings.Contains(log.Original, v)
 	}
 
 	for k, v := range filter.dataTokens {
-		// TODO: check for type and do fuzzy search
-		if log.Data[k] == v {
-			return true
+		switch data := log.Data[k].(type) {
+		case string:
+			match = match && strings.Contains(data, v)
+		default:
+			match = match && data == v
 		}
 	}
 
-	return filter.isEmpty()
+	return match
 }
