@@ -18,13 +18,13 @@ type LineParser interface {
 
 type LogRepository interface {
 	Add(log Log) error
-	GetAll() []Log
+	Get(filter Filter) []Log
 }
 
 type Aggregator struct {
 	parser LineParser
 	repo   LogRepository
-	filter string
+	filter Filter
 }
 
 func NewAggregator(lineParser LineParser, logRepository LogRepository) Aggregator {
@@ -46,22 +46,12 @@ func (a *Aggregator) Aggregate() (observer.Subscriber[Notification], observer.Pu
 				log, _ := a.parser.Parse(input)
 				a.repo.Add(*log)
 
-				if checkLogFilter(*log, a.filter) {
+				if a.filter.Matches(*log) {
 					logNotifier.Publish(Notification{NewEntry: log})
 				}
 			case filter := <-filterSubscription:
-				a.filter = filter
-				if len(filter) == 0 {
-					logNotifier.Publish(Notification{BaseList: a.repo.GetAll()})
-					continue
-				}
-
-				logList := []Log{}
-				for _, v := range a.repo.GetAll() {
-					if checkLogFilter(v, filter) {
-						logList = append(logList, v)
-					}
-				}
+				a.filter = parseFilter(filter)
+				logList := a.repo.Get(a.filter)
 				logNotifier.Publish(Notification{BaseList: logList})
 			}
 		}

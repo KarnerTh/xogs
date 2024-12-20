@@ -17,6 +17,12 @@ func (r *inMemory) Add(logEntry aggregator.Log) error {
 	return nil
 }
 
-func (r *inMemory) GetAll() []aggregator.Log {
-	return r.logs
+func (r *inMemory) Get(filter aggregator.Filter) []aggregator.Log {
+	logs := []aggregator.Log{}
+	for _, log := range r.logs {
+		if filter.Matches(log) {
+			logs = append(logs, log)
+		}
+	}
+	return logs
 }

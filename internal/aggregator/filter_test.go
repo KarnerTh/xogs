@@ -14,15 +14,15 @@ func TestTokenize(t *testing.T) {
 		input := "Test string ABC"
 
 		// Act
-		filter := tokenize(input)
+		filter := parseFilter(input)
 
 		// Assert
-		assert.Empty(t, filter.dataTokens)
-		assert.NotEmpty(t, filter.stringTokens)
-		assert.Len(t, filter.stringTokens, 3)
-		assert.Equal(t, filter.stringTokens[0], "Test")
-		assert.Equal(t, filter.stringTokens[1], "string")
-		assert.Equal(t, filter.stringTokens[2], "ABC")
+		assert.Empty(t, filter.DataTokens)
+		assert.NotEmpty(t, filter.StringTokens)
+		assert.Len(t, filter.StringTokens, 3)
+		assert.Equal(t, filter.StringTokens[0], "Test")
+		assert.Equal(t, filter.StringTokens[1], "string")
+		assert.Equal(t, filter.StringTokens[2], "ABC")
 	})
 
 	t.Run("Tokenize data", func(t *testing.T) {
@@ -31,18 +31,18 @@ func TestTokenize(t *testing.T) {
 		input := "level:warn customField:true"
 
 		// Act
-		filter := tokenize(input)
+		filter := parseFilter(input)
 
 		// Assert
-		assert.Empty(t, filter.stringTokens)
-		assert.NotEmpty(t, filter.dataTokens)
-		assert.Len(t, filter.dataTokens, 2)
+		assert.Empty(t, filter.StringTokens)
+		assert.NotEmpty(t, filter.DataTokens)
+		assert.Len(t, filter.DataTokens, 2)
 		assert.Equal(t,
 			map[string]string{
 				"level":       "warn",
 				"customField": "true",
 			},
-			filter.dataTokens,
+			filter.DataTokens,
 		)
 	})
 
@@ -52,11 +52,11 @@ func TestTokenize(t *testing.T) {
 		input := "level:"
 
 		// Act
-		filter := tokenize(input)
+		filter := parseFilter(input)
 
 		// Assert
-		assert.Empty(t, filter.stringTokens)
-		assert.Empty(t, filter.dataTokens)
+		assert.Empty(t, filter.StringTokens)
+		assert.Empty(t, filter.DataTokens)
 	})
 }
 
@@ -67,10 +67,10 @@ func TestFilter(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		log := Log{Original: "unit test msg"}
-		input := ""
+		filter := Filter{}
 
 		// Act
-		found := checkLogFilter(log, input)
+		found := filter.Matches(log)
 
 		// Assert
 		assert.True(t, found)
@@ -82,10 +82,10 @@ func TestFilter(t *testing.T) {
 			t.Parallel()
 			// Arrange
 			log := Log{Original: "unit test msg"}
-			input := "unit"
+			filter := Filter{StringTokens: []string{"unit"}}
 
 			// Act
-			found := checkLogFilter(log, input)
+			found := filter.Matches(log)
 
 			// Assert
 			assert.True(t, found)
@@ -95,10 +95,10 @@ func TestFilter(t *testing.T) {
 			t.Parallel()
 			// Arrange
 			log := Log{Original: "unit test msg"}
-			input := "shouldFail"
+			filter := Filter{StringTokens: []string{"shouldFail"}}
 
 			// Act
-			found := checkLogFilter(log, input)
+			found := filter.Matches(log)
 
 			// Assert
 			assert.False(t, found)
@@ -111,10 +111,10 @@ func TestFilter(t *testing.T) {
 			t.Parallel()
 			// Arrange
 			log := Log{Data: map[string]any{"dataA": "works"}}
-			input := "dataA:works"
+			filter := Filter{DataTokens: map[string]string{"dataA": "works"}}
 
 			// Act
-			found := checkLogFilter(log, input)
+			found := filter.Matches(log)
 
 			// Assert
 			assert.True(t, found)
@@ -124,10 +124,10 @@ func TestFilter(t *testing.T) {
 			t.Parallel()
 			// Arrange
 			log := Log{Data: map[string]any{"dataA": "works"}}
-			input := "dataA:shouldFail"
+			filter := Filter{DataTokens: map[string]string{"dataA": "shouldFail"}}
 
 			// Act
-			found := checkLogFilter(log, input)
+			found := filter.Matches(log)
 
 			// Assert
 			assert.False(t, found)
@@ -137,10 +137,10 @@ func TestFilter(t *testing.T) {
 			t.Parallel()
 			// Arrange
 			log := Log{Data: map[string]any{"dataA": "works"}}
-			input := "shouldFail:works"
+			filter := Filter{DataTokens: map[string]string{"shouldFail": "works"}}
 
 			// Act
-			found := checkLogFilter(log, input)
+			found := filter.Matches(log)
 
 			// Assert
 			assert.False(t, found)
@@ -150,10 +150,10 @@ func TestFilter(t *testing.T) {
 			t.Parallel()
 			// Arrange
 			log := Log{Data: map[string]any{"dataA": "someLongValue"}}
-			input := "dataA:some"
+			filter := Filter{DataTokens: map[string]string{"dataA": "some"}}
 
 			// Act
-			found := checkLogFilter(log, input)
+			found := filter.Matches(log)
 
 			// Assert
 			assert.True(t, found)
@@ -166,10 +166,13 @@ func TestFilter(t *testing.T) {
 			t.Parallel()
 			// Arrange
 			log := Log{Data: map[string]any{"dataA": "works", "dataB": "works"}}
-			input := "dataA:works dataB:works"
+			filter := Filter{DataTokens: map[string]string{
+				"dataA": "works",
+				"dataB": "works",
+			}}
 
 			// Act
-			found := checkLogFilter(log, input)
+			found := filter.Matches(log)
 
 			// Assert
 			assert.True(t, found)
@@ -179,10 +182,13 @@ func TestFilter(t *testing.T) {
 			t.Parallel()
 			// Arrange
 			log := Log{Data: map[string]any{"dataA": "works", "dataB": "works"}}
-			input := "dataA:works dataB:shouldFail"
+			filter := Filter{DataTokens: map[string]string{
+				"dataA": "works",
+				"dataB": "shouldFail",
+			}}
 
 			// Act
-			found := checkLogFilter(log, input)
+			found := filter.Matches(log)
 
 			// Assert
 			assert.False(t, found)

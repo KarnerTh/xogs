@@ -2,12 +2,12 @@ package aggregator
 
 import "strings"
 
-type filter struct {
-	stringTokens []string
-	dataTokens   map[string]string
+type Filter struct {
+	StringTokens []string
+	DataTokens   map[string]string
 }
 
-func tokenize(input string) filter {
+func parseFilter(input string) Filter {
 	tokens := strings.Split(input, " ")
 	stringTokens := []string{}
 	dataTokens := map[string]string{}
@@ -29,21 +29,20 @@ func tokenize(input string) filter {
 		}
 	}
 
-	return filter{
-		stringTokens: stringTokens,
-		dataTokens:   dataTokens,
+	return Filter{
+		StringTokens: stringTokens,
+		DataTokens:   dataTokens,
 	}
 }
 
-func checkLogFilter(log Log, input string) bool {
-	filter := tokenize(input)
+func (filter Filter) Matches(log Log) bool {
 	match := true
 
-	for _, v := range filter.stringTokens {
+	for _, v := range filter.StringTokens {
 		match = match && strings.Contains(log.Original, v)
 	}
 
-	for k, v := range filter.dataTokens {
+	for k, v := range filter.DataTokens {
 		switch data := log.Data[k].(type) {
 		case string:
 			match = match && strings.Contains(data, v)
