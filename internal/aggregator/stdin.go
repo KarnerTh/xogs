@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"time"
 
 	"github.com/KarnerTh/xogs/internal/observer"
 )
@@ -12,8 +11,7 @@ import (
 var inputNotifier = observer.New[Input]()
 
 type Input struct {
-	Timestamp time.Time
-	Value     string
+	Value string
 }
 
 func getInputSubscriber() observer.Subscriber[Input] {
@@ -28,7 +26,7 @@ func readFromStdin() {
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
 		line := scanner.Text()
-		inputNotifier.Publish(Input{Timestamp: time.Now(), Value: line})
+		inputNotifier.Publish(Input{Value: line})
 	}
 
 	if err := scanner.Err(); err != nil {

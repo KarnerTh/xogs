@@ -43,12 +43,7 @@ func (filter Filter) Matches(log Log) bool {
 	}
 
 	for k, v := range filter.DataTokens {
-		switch data := log.Data[k].(type) {
-		case string:
-			match = match && strings.Contains(data, v)
-		default:
-			match = match && data == v
-		}
+		match = match && strings.Contains(log.Data[k], v)
 	}
 
 	return match

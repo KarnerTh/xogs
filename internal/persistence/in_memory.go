@@ -1,6 +1,8 @@
 package persistence
 
 import (
+	"fmt"
+
 	"github.com/KarnerTh/xogs/internal/aggregator"
 )
 
@@ -17,12 +19,21 @@ func (r *inMemory) Add(logEntry aggregator.Log) error {
 	return nil
 }
 
-func (r *inMemory) Get(filter aggregator.Filter) []aggregator.Log {
+func (r *inMemory) Get(filter aggregator.Filter) ([]aggregator.Log, error) {
 	logs := []aggregator.Log{}
 	for _, log := range r.logs {
 		if filter.Matches(log) {
 			logs = append(logs, log)
 		}
 	}
-	return logs
+	return logs, nil
+}
+
+func (r *inMemory) GetById(id string) (*aggregator.Log, error) {
+	for _, log := range r.logs {
+		if log.Id == id {
+			return &log, nil
+		}
+	}
+	return nil, fmt.Errorf("Log with id %s not found", id)
 }

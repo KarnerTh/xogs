@@ -18,7 +18,7 @@ func (p logfmtParser) Parse(input aggregator.Input) (*aggregator.Log, error) {
 	pattern := regexp.MustCompile(`(?P<key>[a-z]+)=(?P<value>(?:"(.*)")|(?:(?:([^\s]+))))`)
 	matches := pattern.FindAllStringSubmatch(input.Value, -1)
 
-	data := map[string]any{}
+	data := map[string]string{}
 	for i := range matches {
 		key := matches[i][pattern.SubexpIndex("key")]
 		value := matches[i][pattern.SubexpIndex("value")]

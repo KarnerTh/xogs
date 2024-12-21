@@ -8,3 +8,4 @@
 
 prio:
  - handle wrong parser in config
+ - update log list while detail page is shown

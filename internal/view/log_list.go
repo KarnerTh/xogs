@@ -12,7 +12,7 @@ import (
 
 var (
 	inputStyle   = lipgloss.NewStyle().Align(lipgloss.Left).Border(lipgloss.RoundedBorder())
-	contentStyle = lipgloss.NewStyle().Align(lipgloss.Left, lipgloss.Top).PaddingTop(1)
+	contentStyle = lipgloss.NewStyle().Align(lipgloss.Left, lipgloss.Top)
 )
 
 type logListModel struct {
@@ -96,11 +96,6 @@ func (m logListModel) handleKeyPress(msg tea.KeyMsg) (logListModel, tea.Cmd, boo
 			preventPropergation = true
 			return m, nil, preventPropergation
 		}
-	// case "q":
-	// 	if !m.input.Focused() {
-	// 		m.isQuitting = true
-	// 		return m, tea.Quit, preventPropergation
-	// 	}
 	case "enter":
 		if m.input.Focused() {
 			m.table.Focus()
@@ -165,7 +160,7 @@ func mapLogToRow(displayConfig config.DisplayConfig, log aggregator.Log) table.R
 		} else if v.ValueKey == config.ValueKeyRaw {
 			row[i] = log.Raw
 		} else {
-			row[i] = log.GetStringData(v.ValueKey)
+			row[i] = log.Data[v.ValueKey]
 		}
 	}
 
@@ -176,7 +171,6 @@ func (m logListModel) View() string {
 	input := inputStyle.Width(m.width - 2).Render(m.input.View())
 	content := contentStyle.
 		Width(m.width).
-		Height(m.height - 3).
 		Render(lipgloss.JoinHorizontal(lipgloss.Bottom, m.table.View()))
 
 	return lipgloss.JoinVertical(lipgloss.Top, content, input)

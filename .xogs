@@ -8,7 +8,7 @@ profiles:
           width: 0.1
           valueKey: level
         - title: msg
-          width: 0.7
+          width: 0.8
           valueKey: msg
         - title: tag
           width: 0.1
@@ -17,13 +17,22 @@ profiles:
     parser: logfmt
     displayConfig:
       columns:
-        - title: whaaaaaat
+        - title: yeah
           width: 0.1
-          valueKey: level
+          valueKey: env
         - title: msg
           width: 0.7
           valueKey: msg
         - title: tag
           width: 0.1
           valueKey: tag
-      
+  - name: ping
+    parser: ping
+    displayConfig:
+      columns:
+        - title: time
+          width: 0.1
+          valueKey: time
+        - title: msg
+          width: 0.7
+          valueKey: __raw

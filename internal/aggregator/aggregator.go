@@ -1,6 +1,8 @@
 package aggregator
 
 import (
+	"log"
+
 	"github.com/KarnerTh/xogs/internal/observer"
 )
 
@@ -18,7 +20,8 @@ type LineParser interface {
 
 type LogRepository interface {
 	Add(log Log) error
-	Get(filter Filter) []Log
+	Get(filter Filter) ([]Log, error)
+	GetById(id string) (*Log, error)
 }
 
 type Aggregator struct {
@@ -51,7 +54,11 @@ func (a *Aggregator) Aggregate() (observer.Subscriber[Notification], observer.Pu
 				}
 			case filter := <-filterSubscription:
 				a.filter = parseFilter(filter)
-				logList := a.repo.Get(a.filter)
+				logList, err := a.repo.Get(a.filter)
+				if err != nil {
+					log.Printf(err.Error())
+				}
+
 				logNotifier.Publish(Notification{BaseList: logList})
 			}
 		}

@@ -110,7 +110,7 @@ func TestFilter(t *testing.T) {
 		t.Run("data matches", func(t *testing.T) {
 			t.Parallel()
 			// Arrange
-			log := Log{Data: map[string]any{"dataA": "works"}}
+			log := Log{Data: map[string]string{"dataA": "works"}}
 			filter := Filter{DataTokens: map[string]string{"dataA": "works"}}
 
 			// Act
@@ -123,7 +123,7 @@ func TestFilter(t *testing.T) {
 		t.Run("data does not match", func(t *testing.T) {
 			t.Parallel()
 			// Arrange
-			log := Log{Data: map[string]any{"dataA": "works"}}
+			log := Log{Data: map[string]string{"dataA": "works"}}
 			filter := Filter{DataTokens: map[string]string{"dataA": "shouldFail"}}
 
 			// Act
@@ -136,7 +136,7 @@ func TestFilter(t *testing.T) {
 		t.Run("unknown data does not match", func(t *testing.T) {
 			t.Parallel()
 			// Arrange
-			log := Log{Data: map[string]any{"dataA": "works"}}
+			log := Log{Data: map[string]string{"dataA": "works"}}
 			filter := Filter{DataTokens: map[string]string{"shouldFail": "works"}}
 
 			// Act
@@ -149,7 +149,7 @@ func TestFilter(t *testing.T) {
 		t.Run("partial data token does match", func(t *testing.T) {
 			t.Parallel()
 			// Arrange
-			log := Log{Data: map[string]any{"dataA": "someLongValue"}}
+			log := Log{Data: map[string]string{"dataA": "someLongValue"}}
 			filter := Filter{DataTokens: map[string]string{"dataA": "some"}}
 
 			// Act
@@ -165,7 +165,7 @@ func TestFilter(t *testing.T) {
 		t.Run("two matching tokens matches", func(t *testing.T) {
 			t.Parallel()
 			// Arrange
-			log := Log{Data: map[string]any{"dataA": "works", "dataB": "works"}}
+			log := Log{Data: map[string]string{"dataA": "works", "dataB": "works"}}
 			filter := Filter{DataTokens: map[string]string{
 				"dataA": "works",
 				"dataB": "works",
@@ -181,7 +181,7 @@ func TestFilter(t *testing.T) {
 		t.Run("one of two matching tokens does not match", func(t *testing.T) {
 			t.Parallel()
 			// Arrange
-			log := Log{Data: map[string]any{"dataA": "works", "dataB": "works"}}
+			log := Log{Data: map[string]string{"dataA": "works", "dataB": "works"}}
 			filter := Filter{DataTokens: map[string]string{
 				"dataA": "works",
 				"dataB": "shouldFail",

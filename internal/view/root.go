@@ -19,6 +19,8 @@ type rootModel struct {
 	pages       []tea.Model
 	selectedLog *aggregator.Log
 	isQuitting  bool
+	window      tea.WindowSizeMsg
+	repo        aggregator.LogRepository
 }
 
 func (m rootModel) Init() tea.Cmd {
@@ -42,10 +44,12 @@ func (m rootModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case aggregator.Notification:
 	case logSelectedMsg:
-		m.pages[detailPage] = newLogDetail(msg.id)
+		m.pages[detailPage] = newLogDetail(msg.id, m.window, m.repo)
 		return m, func() tea.Msg { return pushPageMsg{pageIdx: detailPage} }
 	case pushPageMsg:
 		m.curPageIdx = msg.pageIdx
+	case tea.WindowSizeMsg:
+		m.window = msg
 	case tea.KeyMsg:
 		model, cmd, preventPropergation := m.handleKeyPress(msg)
 		if cmd != nil || preventPropergation {
@@ -56,7 +60,6 @@ func (m rootModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	}
 
 	m.pages[m.curPageIdx], cmd = m.pages[m.curPageIdx].Update(msg)
-
 	return m, cmd
 }
 
@@ -68,12 +71,13 @@ func (m rootModel) View() string {
 	return m.pages[m.curPageIdx].View()
 }
 
-func CreateRootProgram(displayConfig config.DisplayConfig, filter observer.Publisher[string]) *tea.Program {
+func CreateRootProgram(displayConfig config.DisplayConfig, filter observer.Publisher[string], repo aggregator.LogRepository) *tea.Program {
 	return tea.NewProgram(rootModel{
 		curPageIdx: logListPage,
+		repo:       repo,
 		pages: []tea.Model{
 			newLogList(displayConfig, filter),
-			newLogDetail(""),
+			newLogDetail("", tea.WindowSizeMsg{}, repo),
 		},
-	}, tea.WithAltScreen())
+	}, tea.WithAltScreen(), tea.WithMouseAllMotion())
 }

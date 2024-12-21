@@ -37,7 +37,7 @@ var rootCmd = &cobra.Command{
 		logSubscriber, filterPublisher := agg.Aggregate()
 		logSubscription := logSubscriber.Subscribe()
 
-		p := view.CreateRootProgram(profile.DisplayConfig, filterPublisher)
+		p := view.CreateRootProgram(profile.DisplayConfig, filterPublisher, logRepo)
 		go func() {
 			for {
 				notification := <-logSubscription

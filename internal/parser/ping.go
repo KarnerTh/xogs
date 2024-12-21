@@ -17,7 +17,7 @@ func (p curlParser) Parse(input aggregator.Input) (*aggregator.Log, error) {
 	pattern := regexp.MustCompile("time=(?P<time>.*)")
 	matches := pattern.FindStringSubmatch(input.Value)
 
-	data := map[string]any{"timestamp": input.Timestamp}
+	data := map[string]string{}
 
 	if matches != nil {
 		data["time"] = matches[pattern.SubexpIndex("time")]
