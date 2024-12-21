@@ -21,7 +21,11 @@ type Profile struct {
 
 func (c Config) GetProfileByName(name string) (*Profile, error) {
 	for _, p := range c.Profiles {
-		if p.Name == name {
+		if len(name) != 0 && p.Name == name {
+			return &p, nil
+		}
+
+		if len(name) == 0 && p.Name == c.DefaultProfile {
 			return &p, nil
 		}
 	}
