@@ -23,7 +23,7 @@ func (p curlParser) Parse(input aggregator.Input) (*aggregator.Log, error) {
 	}
 
 	return &aggregator.Log{
-		Original: input.Value,
+		Raw: input.Value,
 		Data:     data,
 	}, nil
 }

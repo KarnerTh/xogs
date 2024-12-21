@@ -11,8 +11,8 @@ const (
 )
 
 type Log struct {
-	Data     map[string]any
-	Original string
+	Data map[string]any
+	Raw  string
 }
 
 func (l Log) GetStringData(key string) string {

@@ -20,7 +20,7 @@ func TestParserPing(t *testing.T) {
 
 		// Assert
 		assert.Nil(t, err)
-		assert.Equal(t, line, log.Original)
+		assert.Equal(t, line, log.Raw)
 	})
 
 	t.Run("content", func(t *testing.T) {
@@ -34,7 +34,7 @@ func TestParserPing(t *testing.T) {
 
 		// Assert
 		assert.Nil(t, err)
-		assert.Equal(t, line, log.Original)
+		assert.Equal(t, line, log.Raw)
 		assert.Equal(t, "17.5 ms", log.Data["time"])
 	})
 }

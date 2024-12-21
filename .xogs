@@ -1,0 +1,29 @@
+defaultProfile: logfmt
+profiles:
+  - name: logfmt 
+    parser: logfmt
+    displayConfig:
+      columns:
+        - title: level
+          width: 0.1
+          valueKey: level
+        - title: msg
+          width: 0.7
+          valueKey: msg
+        - title: tag
+          width: 0.1
+          valueKey: tag
+  - name: logfmt2
+    parser: logfmt
+    displayConfig:
+      columns:
+        - title: whaaaaaat
+          width: 0.1
+          valueKey: level
+        - title: msg
+          width: 0.7
+          valueKey: msg
+        - title: tag
+          width: 0.1
+          valueKey: tag
+      

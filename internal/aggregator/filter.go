@@ -39,7 +39,7 @@ func (filter Filter) Matches(log Log) bool {
 	match := true
 
 	for _, v := range filter.StringTokens {
-		match = match && strings.Contains(log.Original, v)
+		match = match && strings.Contains(log.Raw, v)
 	}
 
 	for k, v := range filter.DataTokens {

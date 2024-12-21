@@ -66,7 +66,7 @@ func TestFilter(t *testing.T) {
 	t.Run("Empty filter should match", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
-		log := Log{Original: "unit test msg"}
+		log := Log{Raw: "unit test msg"}
 		filter := Filter{}
 
 		// Act
@@ -81,7 +81,7 @@ func TestFilter(t *testing.T) {
 		t.Run("log matches", func(t *testing.T) {
 			t.Parallel()
 			// Arrange
-			log := Log{Original: "unit test msg"}
+			log := Log{Raw: "unit test msg"}
 			filter := Filter{StringTokens: []string{"unit"}}
 
 			// Act
@@ -94,7 +94,7 @@ func TestFilter(t *testing.T) {
 		t.Run("log does not match", func(t *testing.T) {
 			t.Parallel()
 			// Arrange
-			log := Log{Original: "unit test msg"}
+			log := Log{Raw: "unit test msg"}
 			filter := Filter{StringTokens: []string{"shouldFail"}}
 
 			// Act

@@ -2,6 +2,7 @@ package view
 
 import (
 	"github.com/KarnerTh/xogs/internal/aggregator"
+	"github.com/KarnerTh/xogs/internal/config"
 	"github.com/KarnerTh/xogs/internal/observer"
 	"github.com/charmbracelet/bubbles/table"
 	"github.com/charmbracelet/bubbles/textinput"
@@ -15,23 +16,13 @@ var (
 )
 
 type model struct {
-	displayConfig   DisplayConfig
+	displayConfig   config.DisplayConfig
 	filterPublisher observer.Publisher[string]
 	isQuitting      bool
 	follow          bool
 	width, height   int
 	table           table.Model
 	input           textinput.Model
-}
-
-type ColumnConfig struct {
-	Title string
-	Width float32
-	Value func(log aggregator.Log) string
-}
-
-type DisplayConfig struct {
-	Columns []ColumnConfig
 }
 
 func (m model) Init() tea.Cmd {
@@ -132,10 +123,14 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, cmd
 }
 
-func mapLogToRow(displayConfig DisplayConfig, log aggregator.Log) table.Row {
+func mapLogToRow(displayConfig config.DisplayConfig, log aggregator.Log) table.Row {
 	row := make(table.Row, len(displayConfig.Columns))
 	for i, v := range displayConfig.Columns {
-		row[i] = v.Value(log)
+		if v.ValueKey == config.ValueKeyRaw {
+			row[i] = log.Raw
+		} else {
+			row[i] = log.GetStringData(v.ValueKey)
+		}
 	}
 
 	return row
@@ -155,7 +150,7 @@ func (m model) View() string {
 	return lipgloss.JoinVertical(lipgloss.Top, content, input)
 }
 
-func CreateRootProgram(displayConfig DisplayConfig, filter observer.Publisher[string]) *tea.Program {
+func CreateRootProgram(displayConfig config.DisplayConfig, filter observer.Publisher[string]) *tea.Program {
 	columns := make([]table.Column, len(displayConfig.Columns))
 	for i, v := range displayConfig.Columns {
 		columns[i] = table.Column{

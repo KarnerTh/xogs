@@ -2,20 +2,21 @@ package parser
 
 import "github.com/KarnerTh/xogs/internal/aggregator"
 
-type Parser = int
+type Parser = string
 
 const (
-	ParserPing Parser = iota
-	ParserLogfmt
+	ParserPing   Parser = "ping"
+	ParserLogfmt Parser = "logfmt"
 )
 
-func GetParser(parser Parser) (aggregator.LineParser, error) {
+func GetParser(parser Parser) aggregator.LineParser {
 	switch parser {
 	case ParserPing:
-		return newPingParser(), nil
+		return newPingParser()
 	case ParserLogfmt:
-		return newLogfmtParser(), nil
+		return newLogfmtParser()
 	default:
-		return nil, nil
+		// TODO: maybe different default?
+		return newLogfmtParser()
 	}
 }

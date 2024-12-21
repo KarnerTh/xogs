@@ -20,7 +20,7 @@ func TestParserLogfmt(t *testing.T) {
 
 		// Assert
 		assert.Nil(t, err)
-		assert.Equal(t, line, log.Original)
+		assert.Equal(t, line, log.Raw)
 		assert.Equal(t,
 			map[string]any{
 				"level": "info",
