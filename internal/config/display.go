@@ -3,6 +3,7 @@ package config
 type ReservedValueKey = string
 
 const (
+	ValueKeyId  ReservedValueKey = "__id"
 	ValueKeyRaw ReservedValueKey = "__raw"
 )
 
@@ -15,4 +16,3 @@ type ColumnConfig struct {
 	Width    float32
 	ValueKey string
 }
-

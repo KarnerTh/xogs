@@ -38,11 +38,8 @@ var DefaultProfile = Profile{
 	Parser: parser.ParserLogfmt, // TODO: sane default?
 	DisplayConfig: DisplayConfig{
 		Columns: []ColumnConfig{
-			{
-				Title:    "log",
-				Width:    1,
-				ValueKey: ValueKeyRaw,
-			},
+			{Title: "id", Width: 0, ValueKey: ValueKeyId},
+			{Title: "log", Width: 1, ValueKey: ValueKeyRaw},
 		},
 	},
 }
@@ -70,5 +67,14 @@ func Setup() Config {
 	if err != nil {
 		panic(fmt.Errorf("fatal error unmarshalling config: %w", err))
 	}
+
+	for i, v := range config.Profiles {
+		config.Profiles[i].DisplayConfig.Columns = append(
+			// hidden id column for reference
+			[]ColumnConfig{{Title: "id", Width: 0, ValueKey: ValueKeyId}},
+			v.DisplayConfig.Columns...,
+		)
+	}
+
 	return config
 }

@@ -4,6 +4,7 @@ import (
 	"regexp"
 
 	"github.com/KarnerTh/xogs/internal/aggregator"
+	"github.com/google/uuid"
 )
 
 type curlParser struct{}
@@ -23,7 +24,8 @@ func (p curlParser) Parse(input aggregator.Input) (*aggregator.Log, error) {
 	}
 
 	return &aggregator.Log{
-		Raw: input.Value,
-		Data:     data,
+		Id:   uuid.New().String(),
+		Raw:  input.Value,
+		Data: data,
 	}, nil
 }

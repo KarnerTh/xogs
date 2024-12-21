@@ -4,6 +4,7 @@ go 1.23.1
 
 require (
 	github.com/charmbracelet/bubbles v0.20.0
+	github.com/google/uuid v1.6.0
 	github.com/spf13/viper v1.19.0
 )
 

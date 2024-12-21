@@ -11,6 +11,7 @@ const (
 )
 
 type Log struct {
+	Id   string
 	Data map[string]any
 	Raw  string
 }
