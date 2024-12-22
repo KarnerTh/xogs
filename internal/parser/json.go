@@ -32,20 +32,51 @@ func (p jsonParser) Parse(input aggregator.Input) (*aggregator.Log, error) {
 func parseMapValues(value map[string]any, keyPrefix string) map[string]string {
 	data := map[string]string{}
 	for k, v := range value {
-		key := k
-		if len(keyPrefix) != 0 {
-			key = fmt.Sprintf("%s.%s", keyPrefix, key)
-		}
+		key := keyPrefix + k
 
 		switch value := v.(type) {
-		case string:
-			data[key] = value
-		case float64:
-			data[key] = strconv.FormatFloat(value, 'f', -1, 64)
-		case bool:
-			data[key] = strconv.FormatBool(value)
+		case string, float64, bool:
+			data[key] = parsePrimitiveValues(value)
 		case map[string]any:
-			nestedData := parseMapValues(value, key)
+			nestedKey := fmt.Sprintf("%s.", key)
+			nestedData := parseMapValues(value, nestedKey)
+			maps.Copy(data, nestedData)
+		case []any:
+			nestedData := parseArrayValues(value, key)
+			maps.Copy(data, nestedData)
+		}
+	}
+
+	return data
+}
+
+func parsePrimitiveValues(v any) string {
+	switch value := v.(type) {
+	case string:
+		return value
+	case float64:
+		return strconv.FormatFloat(value, 'f', -1, 64)
+	case bool:
+		return strconv.FormatBool(value)
+	default:
+		return ""
+	}
+}
+
+func parseArrayValues(value []any, key string) map[string]string {
+	data := map[string]string{}
+	for i, value := range value {
+		switch nestedValue := value.(type) {
+		case string, float64, bool:
+			nestedKey := fmt.Sprintf("%s[%d]", key, i)
+			data[nestedKey] = parsePrimitiveValues(nestedValue)
+		case map[string]any:
+			nestedKey := fmt.Sprintf("%s[%d].", key, i)
+			nestedData := parseMapValues(nestedValue, nestedKey)
+			maps.Copy(data, nestedData)
+		case []any:
+			nestedKey := fmt.Sprintf("%s[%d]", key, i)
+			nestedData := parseArrayValues(nestedValue, nestedKey)
 			maps.Copy(data, nestedData)
 		}
 	}
