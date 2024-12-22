@@ -2,3 +2,4 @@
 {"level": "info", "tag": "0815", "env": "prod", "msg": "another test log"}
 {"level": "error", "env": "prod", "msg": "something went wrong"}
 {"level": "warn", "env": "prod", "msg": "something to look at"}
+{"level": "info", "tag": "0815", "env": "prod", "msg": "nested test", "some": {"nested": {"data": "works"}}}

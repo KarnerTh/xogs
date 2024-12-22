@@ -44,6 +44,9 @@ profiles:
         - title: env
           width: 0.1
           valueKey: env
+        - title: nested
+          width: 0.1
+          valueKey: some.nested.data
         - title: msg
           width: 0.7
           valueKey: msg

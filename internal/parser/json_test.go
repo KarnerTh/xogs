@@ -26,4 +26,32 @@ func TestParserJons(t *testing.T) {
 		assert.Equal(t, "true", log.Data["prod"])
 		assert.Equal(t, "test log", log.Data["msg"])
 	})
+
+	t.Run("nested object", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		line := `{"some": {"value": "works"}}`
+
+		// Act
+		log, err := parser.Parse(aggregator.Input{Value: line})
+
+		// Assert
+		assert.Nil(t, err)
+		assert.Equal(t, line, log.Raw)
+		assert.Equal(t, "works", log.Data["some.value"])
+	})
+
+	t.Run("deeply nested object", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		line := `{"some": {"value": {"that": {"is": {"deeply": {"nested": "works"}}}}}}`
+
+		// Act
+		log, err := parser.Parse(aggregator.Input{Value: line})
+
+		// Assert
+		assert.Nil(t, err)
+		assert.Equal(t, line, log.Raw)
+		assert.Equal(t, "works", log.Data["some.value.that.is.deeply.nested"])
+	})
 }
