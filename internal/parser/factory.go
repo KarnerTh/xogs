@@ -6,9 +6,14 @@ import (
 )
 
 func GetParser(profile config.Profile) aggregator.LineParser {
-	if profile.Parser.Regex != nil {
+	switch {
+	case profile.Parser.Regex != nil:
 		return newRegexParser(profile.Parser.Regex.Values)
+	case profile.Parser.Logfmt != nil:
+		return newLogfmtParser()
+	case profile.Parser.Json != nil:
+		return newJsonParser()
+	default:
+		return newLogfmtParser() // TODO: sane default?
 	}
-
-	return newLogfmtParser()
 }

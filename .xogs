@@ -2,7 +2,7 @@ defaultProfile: logfmt
 profiles:
   - name: logfmt 
     parser: 
-      logfmt: 
+      logfmt: {}
     displayConfig:
       columns:
         - title: level
@@ -10,20 +10,6 @@ profiles:
           valueKey: level
         - title: msg
           width: 0.8
-          valueKey: msg
-        - title: tag
-          width: 0.1
-          valueKey: tag
-  - name: logfmt2
-    parser:
-      logfmt: 
-    displayConfig:
-      columns:
-        - title: yeah
-          width: 0.1
-          valueKey: env
-        - title: msg
-          width: 0.7
           valueKey: msg
         - title: tag
           width: 0.1
@@ -47,3 +33,17 @@ profiles:
         - title: msg
           width: 0.7
           valueKey: __raw
+  - name: json
+    parser: 
+      json: {}
+    displayConfig:
+      columns:
+        - title: level
+          width: 0.1
+          valueKey: level
+        - title: env
+          width: 0.1
+          valueKey: env
+        - title: msg
+          width: 0.7
+          valueKey: msg
