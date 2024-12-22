@@ -1,22 +1,14 @@
 package parser
 
-import "github.com/KarnerTh/xogs/internal/aggregator"
-
-type Parser = string
-
-const (
-	ParserPing   Parser = "ping"
-	ParserLogfmt Parser = "logfmt"
+import (
+	"github.com/KarnerTh/xogs/internal/aggregator"
+	"github.com/KarnerTh/xogs/internal/config"
 )
 
-func GetParser(parser Parser) aggregator.LineParser {
-	switch parser {
-	case ParserPing:
-		return newPingParser()
-	case ParserLogfmt:
-		return newLogfmtParser()
-	default:
-		// TODO: maybe different default?
-		return newLogfmtParser()
+func GetParser(profile config.Profile) aggregator.LineParser {
+	if profile.Parser.Regex != nil {
+		return newRegexParser(profile.Parser.Regex.Values)
 	}
+
+	return newLogfmtParser()
 }

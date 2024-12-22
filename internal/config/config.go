@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/KarnerTh/xogs/internal/parser"
 	"github.com/spf13/viper"
 )
 
@@ -15,7 +14,7 @@ type Config struct {
 
 type Profile struct {
 	Name          string
-	Parser        string
+	Parser        Parser
 	DisplayConfig DisplayConfig
 }
 
@@ -35,7 +34,7 @@ func (c Config) GetProfileByName(name string) (*Profile, error) {
 
 var DefaultProfile = Profile{
 	Name:   "default",
-	Parser: parser.ParserLogfmt, // TODO: sane default?
+	Parser: Parser{}, // TODO: sane default?
 	DisplayConfig: DisplayConfig{
 		Columns: []ColumnConfig{
 			{Title: "id", Width: 0, ValueKey: ValueKeyId},
