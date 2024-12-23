@@ -50,3 +50,17 @@ profiles:
         - title: msg
           width: 0.7
           valueKey: msg
+  - name: logstash
+    parser: 
+      json: {}
+    displayConfig:
+      columns:
+        - title: level
+          width: 0.1
+          valueKey: "@fields.level"
+        - title: timestamp
+          width: 0.1
+          valueKey: "@timestamp"
+        - title: msg
+          width: 0.4
+          valueKey: "@message"

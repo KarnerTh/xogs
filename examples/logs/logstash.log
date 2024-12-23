@@ -1,0 +1,5 @@
+{"@fields":{"label":"server/startBgProcesses.js","level":"info"},"@message":"abc: starting background-processes (enabled: 'true')","@timestamp":"2024-12-17T14:00:29.484Z"}
+{"@fields":{"label":"importer/importer.ts","level":"info"},"@message":"importer not enabled, aborting start of XX-importer ....","@timestamp":"2024-12-17T14:00:29.488Z"}
+{"@fields":{"batchSize":1,"keepAlive":false,"label":"infrastructure/IntegrationEvents.js","level":"info","queueUrl":"https://sqs.us-east-1.amazonaws.com/0000/SomeQueue"},"@message":"subscribeToEvents:started","@timestamp":"2024-12-17T14:00:29.490Z"}
+{"@fields":{"label":"server/extractReferenceResolvers.js","level":"debug"},"@message":"referenceResolvers: User.__resolveReference exists","@timestamp":"2024-12-17T14:00:29.705Z"}
+{"@fields":{"label":"server/extractReferenceResolvers.js","level":"debug"},"@message":"referenceResolvers: Employer.__resolveReference exists","@timestamp":"2024-12-17T14:00:29.705Z"}

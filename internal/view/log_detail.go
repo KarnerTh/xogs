@@ -28,7 +28,7 @@ var (
 	cellStyle          = lipgloss.NewStyle().PaddingRight(2)
 	oddRowStyle        = cellStyle.Foreground(lipgloss.Color("250"))
 	evenRowStyle       = cellStyle.Foreground(lipgloss.Color("245"))
-	keyColumMaxWidth   = 15
+	keyColumMaxWidth   = 80
 
 	headerHeight, footerHeight = 3, 3
 	widthPadding               = 2
