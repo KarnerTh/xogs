@@ -64,3 +64,31 @@ profiles:
         - title: msg
           width: 0.4
           valueKey: "@message"
+  - name: logstash_with_prefix
+    parser: 
+      combine:
+        steps:
+          - parser:
+              regex:
+                values:
+                  - key: service
+                    regex: '\[([^\]]+)\]'
+                  - key: log
+                    regex: '\[[^\]]+\]\s(.*)'
+          - inputKey: log
+            parser:
+              json: {}
+    displayConfig:
+      columns:
+        - title: service
+          width: 0.1
+          valueKey: "service"
+        - title: level
+          width: 0.1
+          valueKey: "@fields.level"
+        - title: timestamp
+          width: 0.1
+          valueKey: "@timestamp"
+        - title: msg
+          width: 0.4
+          valueKey: "@message"

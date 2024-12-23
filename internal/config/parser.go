@@ -1,9 +1,10 @@
 package config
 
 type Parser struct {
-	Regex  *ParserRegex
-	Logfmt *ParserLogfmt
-	Json   *ParserJson
+	Regex   *ParserRegex
+	Logfmt  *ParserLogfmt
+	Json    *ParserJson
+	Combine *ParserCombine
 }
 
 type ParserRegex struct {
@@ -18,3 +19,12 @@ type ParserRegexValue struct {
 type ParserLogfmt struct{}
 
 type ParserJson struct{}
+
+type ParserCombine struct {
+	Steps []ParserCombineSteps
+}
+
+type ParserCombineSteps struct {
+	InputKey string
+	Parser   Parser
+}

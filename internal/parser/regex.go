@@ -13,9 +13,7 @@ type regexParser struct {
 }
 
 func newRegexParser(values []config.ParserRegexValue) regexParser {
-	return regexParser{
-		values: values,
-	}
+	return regexParser{values: values}
 }
 
 func (p regexParser) Parse(line string) (*aggregator.Log, error) {

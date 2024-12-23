@@ -5,14 +5,16 @@ import (
 	"github.com/KarnerTh/xogs/internal/config"
 )
 
-func GetParser(profile config.Profile) aggregator.LineParser {
+func GetParser(parser config.Parser) aggregator.LineParser {
 	switch {
-	case profile.Parser.Regex != nil:
-		return newRegexParser(profile.Parser.Regex.Values)
-	case profile.Parser.Logfmt != nil:
+	case parser.Regex != nil:
+		return newRegexParser(parser.Regex.Values)
+	case parser.Logfmt != nil:
 		return newLogfmtParser()
-	case profile.Parser.Json != nil:
+	case parser.Json != nil:
 		return newJsonParser()
+	case parser.Combine != nil:
+		return newCombineParser(parser.Combine.Steps)
 	default:
 		return newLogfmtParser() // TODO: sane default?
 	}
