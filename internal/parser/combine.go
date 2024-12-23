@@ -1,7 +1,6 @@
 package parser
 
 import (
-	"log"
 	"maps"
 
 	"github.com/KarnerTh/xogs/internal/aggregator"
@@ -19,7 +18,6 @@ func newCombineParser(steps []config.ParserCombineSteps) combineParser {
 
 func (p combineParser) Parse(line string) (*aggregator.Log, error) {
 	data := map[string]string{}
-	log.Printf("steps: %+v", p.steps)
 
 	for _, step := range p.steps {
 		stepData := line
