@@ -14,9 +14,9 @@ func newLogfmtParser() logfmtParser {
 	return logfmtParser{}
 }
 
-func (p logfmtParser) Parse(input aggregator.Input) (*aggregator.Log, error) {
+func (p logfmtParser) Parse(line string) (*aggregator.Log, error) {
 	pattern := regexp.MustCompile(`(?P<key>[a-z]+)=(?P<value>(?:"(.*)")|(?:(?:([^\s]+))))`)
-	matches := pattern.FindAllStringSubmatch(input.Value, -1)
+	matches := pattern.FindAllStringSubmatch(line, -1)
 
 	data := map[string]string{}
 	for i := range matches {
@@ -27,7 +27,7 @@ func (p logfmtParser) Parse(input aggregator.Input) (*aggregator.Log, error) {
 
 	return &aggregator.Log{
 		Id:   uuid.New().String(),
-		Raw:  input.Value,
+		Raw:  line,
 		Data: data,
 	}, nil
 }

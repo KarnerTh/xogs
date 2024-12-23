@@ -16,14 +16,14 @@ func newJsonParser() jsonParser {
 	return jsonParser{}
 }
 
-func (p jsonParser) Parse(input aggregator.Input) (*aggregator.Log, error) {
+func (p jsonParser) Parse(line string) (*aggregator.Log, error) {
 	var parsed map[string]any
-	json.Unmarshal([]byte(input.Value), &parsed)
+	json.Unmarshal([]byte(line), &parsed)
 	data := parseMapValues(parsed, "")
 
 	return &aggregator.Log{
 		Id:   uuid.New().String(),
-		Raw:  input.Value,
+		Raw:  line,
 		Data: data,
 	}, nil
 }

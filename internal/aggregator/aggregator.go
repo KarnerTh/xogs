@@ -15,7 +15,7 @@ type Notification struct {
 }
 
 type LineParser interface {
-	Parse(input Input) (*Log, error)
+	Parse(line string) (*Log, error)
 }
 
 type LogRepository interface {
@@ -46,7 +46,7 @@ func (a *Aggregator) Aggregate() (observer.Subscriber[Notification], observer.Pu
 			select {
 			case input := <-inputSubscription:
 				// TODO: handle error
-				log, _ := a.parser.Parse(input)
+				log, _ := a.parser.Parse(input.Value)
 				a.repo.Add(*log)
 
 				if a.filter.Matches(*log) {

@@ -3,7 +3,6 @@ package parser
 import (
 	"testing"
 
-	"github.com/KarnerTh/xogs/internal/aggregator"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -17,7 +16,7 @@ func TestParserJson(t *testing.T) {
 		line := `{"level": 7, "prod": true, "msg": "test log"}`
 
 		// Act
-		log, err := parser.Parse(aggregator.Input{Value: line})
+		log, err := parser.Parse(line)
 
 		// Assert
 		assert.Nil(t, err)
@@ -33,7 +32,7 @@ func TestParserJson(t *testing.T) {
 		line := `{"some": {"value": "works"}}`
 
 		// Act
-		log, err := parser.Parse(aggregator.Input{Value: line})
+		log, err := parser.Parse(line)
 
 		// Assert
 		assert.Nil(t, err)
@@ -47,7 +46,7 @@ func TestParserJson(t *testing.T) {
 		line := `{"some": {"value": {"that": {"is": {"deeply": {"nested": "works"}}}}}}`
 
 		// Act
-		log, err := parser.Parse(aggregator.Input{Value: line})
+		log, err := parser.Parse(line)
 
 		// Assert
 		assert.Nil(t, err)
@@ -61,7 +60,7 @@ func TestParserJson(t *testing.T) {
 		line := `{"values": [{"item": "one"},{"item": "two"}]}`
 
 		// Act
-		log, err := parser.Parse(aggregator.Input{Value: line})
+		log, err := parser.Parse(line)
 
 		// Assert
 		assert.Nil(t, err)
@@ -76,7 +75,7 @@ func TestParserJson(t *testing.T) {
 		line := `{"values": ["one","two"]}`
 
 		// Act
-		log, err := parser.Parse(aggregator.Input{Value: line})
+		log, err := parser.Parse(line)
 
 		// Assert
 		assert.Nil(t, err)
@@ -91,7 +90,7 @@ func TestParserJson(t *testing.T) {
 		line := `{"values": [["one", "two"],["three", "four"]]}`
 
 		// Act
-		log, err := parser.Parse(aggregator.Input{Value: line})
+		log, err := parser.Parse(line)
 
 		// Assert
 		assert.Nil(t, err)
@@ -108,7 +107,7 @@ func TestParserJson(t *testing.T) {
 		line := `{"values": [["one", "two"],[{"item": "three"}, {"item": "four"}]]}`
 
 		// Act
-		log, err := parser.Parse(aggregator.Input{Value: line})
+		log, err := parser.Parse(line)
 
 		// Assert
 		assert.Nil(t, err)

@@ -3,7 +3,6 @@ package parser
 import (
 	"testing"
 
-	"github.com/KarnerTh/xogs/internal/aggregator"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -16,7 +15,7 @@ func TestParserLogfmt(t *testing.T) {
 		line := `level=info tag=0815 env=prod msg="test log"`
 
 		// Act
-		log, err := parser.Parse(aggregator.Input{Value: line})
+		log, err := parser.Parse(line)
 
 		// Assert
 		assert.Nil(t, err)

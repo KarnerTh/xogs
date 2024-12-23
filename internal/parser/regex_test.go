@@ -3,7 +3,6 @@ package parser
 import (
 	"testing"
 
-	"github.com/KarnerTh/xogs/internal/aggregator"
 	"github.com/KarnerTh/xogs/internal/config"
 	"github.com/stretchr/testify/assert"
 )
@@ -23,7 +22,7 @@ func TestParserRegex(t *testing.T) {
 			line := "64 bytes from 8.8.8.8: icmp_seq=2 ttl=118 time=17.5 ms"
 
 			// Act
-			log, err := parser.Parse(aggregator.Input{Value: line})
+			log, err := parser.Parse(line)
 
 			// Assert
 			assert.Nil(t, err)
@@ -38,7 +37,7 @@ func TestParserRegex(t *testing.T) {
 			line := "PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data."
 
 			// Act
-			log, err := parser.Parse(aggregator.Input{Value: line})
+			log, err := parser.Parse(line)
 
 			// Assert
 			assert.Nil(t, err)

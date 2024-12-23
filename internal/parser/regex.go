@@ -18,7 +18,7 @@ func newRegexParser(values []config.ParserRegexValue) regexParser {
 	}
 }
 
-func (p regexParser) Parse(input aggregator.Input) (*aggregator.Log, error) {
+func (p regexParser) Parse(line string) (*aggregator.Log, error) {
 	data := map[string]string{}
 
 	for _, v := range p.values {
@@ -27,7 +27,7 @@ func (p regexParser) Parse(input aggregator.Input) (*aggregator.Log, error) {
 			return nil, err
 		}
 
-		matches := pattern.FindStringSubmatch(input.Value)
+		matches := pattern.FindStringSubmatch(line)
 		if len(matches) > 0 {
 			data[v.Key] = matches[1]
 		}
@@ -35,7 +35,7 @@ func (p regexParser) Parse(input aggregator.Input) (*aggregator.Log, error) {
 
 	return &aggregator.Log{
 		Id:   uuid.New().String(),
-		Raw:  input.Value,
+		Raw:  line,
 		Data: data,
 	}, nil
 }
