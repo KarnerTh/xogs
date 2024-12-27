@@ -1,7 +1,9 @@
 package aggregator
 
 import (
+	"bufio"
 	"log"
+	"os"
 
 	"github.com/KarnerTh/xogs/internal/observer"
 )
@@ -38,7 +40,7 @@ func NewAggregator(lineParser LineParser, logRepository LogRepository) Aggregato
 }
 
 func (a *Aggregator) Aggregate() (observer.Subscriber[Notification], observer.Publisher[string]) {
-	inputSubscription := getInputSubscriber().Subscribe()
+	inputSubscription := getStdinSubscriber().Subscribe()
 	filterSubscription := filterNotifier.Subscribe()
 
 	go func() {
@@ -65,4 +67,28 @@ func (a *Aggregator) Aggregate() (observer.Subscriber[Notification], observer.Pu
 	}()
 
 	return logNotifier, filterNotifier
+}
+
+func (a *Aggregator) AggregateFile(path string) error {
+	file, err := os.Open(path)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		line := scanner.Text()
+		// TODO: handle error
+		log, _ := a.parser.Parse(line)
+		a.repo.Add(*log)
+	}
+
+	logList, err := a.repo.Get(a.filter)
+	if err != nil {
+		log.Printf(err.Error())
+	}
+
+	logNotifier.Publish(Notification{BaseList: logList})
+	return nil
 }

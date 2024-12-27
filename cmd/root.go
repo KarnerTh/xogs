@@ -16,7 +16,8 @@ import (
 
 var selectedProfile string
 var rootCmd = &cobra.Command{
-	Use: "xogs",
+	Use:  "xogs",
+	Args: cobra.ArbitraryArgs,
 	Run: func(cmd *cobra.Command, args []string) {
 		c := config.Setup()
 		if err := c.Validate(config.ValidationData{SelectedProfile: selectedProfile}); err != nil {
@@ -25,7 +26,6 @@ var rootCmd = &cobra.Command{
 		}
 
 		profile, _ := c.GetProfileByName(selectedProfile)
-
 		// f, err := tea.LogToFile("debug.log", "debug")
 		// if err != nil {
 		// 	fmt.Println("fatal:", err)
@@ -47,6 +47,16 @@ var rootCmd = &cobra.Command{
 			}
 
 		}()
+
+		// handle file argument
+		if len(args) != 0 {
+			err := agg.AggregateFile(args[0])
+			if err != nil {
+				log.Println(err)
+				os.Exit(1)
+			}
+		}
+
 		if _, err := p.Run(); err != nil {
 			fmt.Println("Error running program:", err)
 			os.Exit(1)

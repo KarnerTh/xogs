@@ -8,32 +8,31 @@ import (
 	"github.com/KarnerTh/xogs/internal/observer"
 )
 
-var inputNotifier = observer.New[Input]()
+var stdinNotifier = observer.New[Input]()
 
 type Input struct {
 	Value string
 }
 
-func getInputSubscriber() observer.Subscriber[Input] {
+func getStdinSubscriber() observer.Subscriber[Input] {
 	if hasStdinContent() {
 		go readFromStdin()
 	}
 
-	return inputNotifier
+	return stdinNotifier
 }
 
 func readFromStdin() {
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
 		line := scanner.Text()
-		inputNotifier.Publish(Input{Value: line})
+		stdinNotifier.Publish(Input{Value: line})
 	}
 
 	if err := scanner.Err(); err != nil {
 		fmt.Println("error in scanning: ", err)
 		os.Exit(1)
 	}
-
 }
 
 func hasStdinContent() bool {

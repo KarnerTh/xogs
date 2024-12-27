@@ -3,7 +3,6 @@
 - line wrap in detail page
 - test default logger
 - sort by column header not by data key?
-- read logs from file instead of stdin
 - log list UI improvement?
 
 # backlog:
