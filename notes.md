@@ -1,10 +1,10 @@
 # prio:
 
-- handle wrong parser in config
+- line wrap in detail page
 - test default logger
 - sort by column header not by data key?
-- line wrap in detail page
 - read logs from file instead of stdin
+- log list UI improvement?
 
 # backlog:
 

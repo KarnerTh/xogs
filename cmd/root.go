@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 	"log/slog"
 	"os"
 
@@ -10,7 +11,6 @@ import (
 	"github.com/KarnerTh/xogs/internal/parser"
 	"github.com/KarnerTh/xogs/internal/persistence"
 	"github.com/KarnerTh/xogs/internal/view"
-	tea "github.com/charmbracelet/bubbletea"
 	"github.com/spf13/cobra"
 )
 
@@ -19,17 +19,19 @@ var rootCmd = &cobra.Command{
 	Use: "xogs",
 	Run: func(cmd *cobra.Command, args []string) {
 		c := config.Setup()
-		profile, err := c.GetProfileByName(selectedProfile)
-		if err != nil {
-			profile = &config.DefaultProfile
-		}
-
-		f, err := tea.LogToFile("debug.log", "debug")
-		if err != nil {
-			fmt.Println("fatal:", err)
+		if err := c.Validate(config.ValidationData{SelectedProfile: selectedProfile}); err != nil {
+			log.Println(err)
 			os.Exit(1)
 		}
-		defer f.Close()
+
+		profile, _ := c.GetProfileByName(selectedProfile)
+
+		// f, err := tea.LogToFile("debug.log", "debug")
+		// if err != nil {
+		// 	fmt.Println("fatal:", err)
+		// 	os.Exit(1)
+		// }
+		// defer f.Close()
 
 		parser := parser.NewPipeline(profile.Pipeline)
 		logRepo := persistence.NewInMemory()
