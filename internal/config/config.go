@@ -14,7 +14,7 @@ type Config struct {
 
 type Profile struct {
 	Name          string
-	Parser        Parser
+	Pipeline      Pipeline
 	DisplayConfig DisplayConfig
 }
 
@@ -33,8 +33,8 @@ func (c Config) GetProfileByName(name string) (*Profile, error) {
 }
 
 var DefaultProfile = Profile{
-	Name:   "default",
-	Parser: Parser{}, // TODO: sane default?
+	Name:     "default",
+	Pipeline: Pipeline{}, // TODO: sane default?
 	DisplayConfig: DisplayConfig{
 		Columns: []ColumnConfig{
 			{Title: "id", Width: 0, ValueKey: ValueKeyId},

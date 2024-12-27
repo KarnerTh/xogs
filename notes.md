@@ -5,6 +5,7 @@
 - test default logger
 - sort by column header not by data key?
 - line wrap in detail page
+- read logs from file instead of stdin
 
 # backlog:
 

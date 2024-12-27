@@ -8,11 +8,11 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestParserCombine(t *testing.T) {
+func TestPipeline(t *testing.T) {
 	t.Parallel()
 	t.Run("json with prefix", func(t *testing.T) {
 		t.Parallel()
-		parser := newCombineParser([]config.ParserCombineSteps{
+		parser := newPipeline([]config.Processor{
 			{
 				Parser: config.Parser{
 					Regex: &config.ParserRegex{
@@ -43,7 +43,7 @@ func TestParserCombine(t *testing.T) {
 		assert.Equal(t, "info", log.Data["level"])
 		assert.Equal(t, "works", log.Data["msg"])
 
-		// make sure intermediate data from combine parser is not persisted
+		// make sure intermediate data from pipeline is not persisted
 		assert.NotContains(t, log.Data, "log")
 	})
 }

@@ -15,13 +15,15 @@ profiles:
           width: 0.1
           valueKey: tag
   - name: ping
-    parser: 
-      regex:
-        values:
-          - key: time
-            regex: "time=(.*)"
-          - key: ttl
-            regex: 'ttl=(\d*)'
+    pipeline:
+      processors:
+        - parser: 
+            regex:
+              values:
+                - key: time
+                  regex: "time=(.*)"
+                - key: ttl
+                  regex: 'ttl=(\d*)'
     displayConfig:
       columns:
         - title: time
@@ -34,8 +36,10 @@ profiles:
           width: 0.7
           valueKey: __raw
   - name: json
-    parser: 
-      json: {}
+    pipeline:
+      processors:
+        - parser: 
+            json: {}
     displayConfig:
       columns:
         - title: level
@@ -51,8 +55,10 @@ profiles:
           width: 0.7
           valueKey: msg
   - name: logstash
-    parser: 
-      json: {}
+    pipeline:
+      processors:
+        - parser: 
+            json: {}
     displayConfig:
       columns:
         - title: level
@@ -65,19 +71,18 @@ profiles:
           width: 0.4
           valueKey: "@message"
   - name: logstash_with_prefix
-    parser: 
-      combine:
-        steps:
-          - parser:
-              regex:
-                values:
-                  - key: service
-                    regex: '\[([^\]]+)\]'
-                  - key: log
-                    regex: '\[[^\]]+\]\s(.*)'
-          - inputKey: log
-            parser:
-              json: {}
+    pipeline:
+      processors:
+        - parser:
+            regex:
+              values:
+                - key: service
+                  regex: '\[([^\]]+)\]'
+                - key: log
+                  regex: '\[[^\]]+\]\s(.*)'
+        - inputKey: log
+          parser:
+            json: {}
     displayConfig:
       columns:
         - title: service

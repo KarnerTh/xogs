@@ -1,10 +1,18 @@
 package config
 
+type Pipeline struct {
+	Processors []Processor
+}
+
+type Processor struct {
+	Parser   Parser
+	InputKey string
+}
+
 type Parser struct {
-	Regex   *ParserRegex
-	Logfmt  *ParserLogfmt
-	Json    *ParserJson
-	Combine *ParserCombine
+	Regex  *ParserRegex
+	Logfmt *ParserLogfmt
+	Json   *ParserJson
 }
 
 type ParserRegex struct {
@@ -19,12 +27,3 @@ type ParserRegexValue struct {
 type ParserLogfmt struct{}
 
 type ParserJson struct{}
-
-type ParserCombine struct {
-	Steps []ParserCombineSteps
-}
-
-type ParserCombineSteps struct {
-	InputKey string
-	Parser   Parser
-}

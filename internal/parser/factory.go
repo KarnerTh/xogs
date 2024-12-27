@@ -5,7 +5,11 @@ import (
 	"github.com/KarnerTh/xogs/internal/config"
 )
 
-func GetParser(parser config.Parser) aggregator.LineParser {
+func NewPipeline(pipeline config.Pipeline) aggregator.LineParser {
+	return newPipeline(pipeline.Processors)
+}
+
+func getParser(parser config.Parser) aggregator.LineParser {
 	switch {
 	case parser.Regex != nil:
 		return newRegexParser(parser.Regex.Values)
@@ -13,8 +17,6 @@ func GetParser(parser config.Parser) aggregator.LineParser {
 		return newLogfmtParser()
 	case parser.Json != nil:
 		return newJsonParser()
-	case parser.Combine != nil:
-		return newCombineParser(parser.Combine.Steps)
 	default:
 		return newLogfmtParser() // TODO: sane default?
 	}
