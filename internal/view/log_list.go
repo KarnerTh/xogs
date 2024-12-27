@@ -125,12 +125,13 @@ func (m logListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				rows[i] = mapLogToRow(m.displayConfig, v)
 			}
 			m.table.SetRows(rows)
-			m.table.GotoBottom()
 		}
 
 		if m.follow {
 			m.table.GotoBottom()
 		}
+	case refreshMsg:
+		m.filterPublisher.Publish(m.input.Value())
 	case tea.WindowSizeMsg:
 		m = m.updateSizes(msg)
 	case tea.KeyMsg:

@@ -7,3 +7,5 @@ type logSelectedMsg struct {
 type pushPageMsg struct {
 	pageIdx page
 }
+
+type refreshMsg struct{}

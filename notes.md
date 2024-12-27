@@ -1,7 +1,6 @@
 # prio:
 
 - handle wrong parser in config
-- update log list while detail page is shown
 - test default logger
 - sort by column header not by data key?
 - line wrap in detail page

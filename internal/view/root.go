@@ -48,6 +48,11 @@ func (m rootModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, func() tea.Msg { return pushPageMsg{pageIdx: detailPage} }
 	case pushPageMsg:
 		m.curPageIdx = msg.pageIdx
+		switch msg.pageIdx {
+		case logListPage:
+			// refresh log list as the page was not getting any events
+			return m, func() tea.Msg { return refreshMsg{} }
+		}
 	case tea.WindowSizeMsg:
 		m.window = msg
 	case tea.KeyMsg:
