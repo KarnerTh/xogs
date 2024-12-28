@@ -3,7 +3,6 @@
 - test default logger
 - sort by column header not by data key?
 - log list UI improvement?
-- sort data map for consistent order
 - rename data fields
 
 # backlog:

@@ -2,6 +2,8 @@ package view
 
 import (
 	"fmt"
+	"maps"
+	"slices"
 	"strings"
 
 	"github.com/KarnerTh/xogs/internal/aggregator"
@@ -67,8 +69,8 @@ func getLogDetail(log aggregator.Log, window tea.WindowSizeMsg) *table.Table {
 		{"id", log.Id},
 	}
 
-	for key, value := range log.Data {
-		rows = append(rows, []string{key, value})
+	for _, key := range slices.Sorted(maps.Keys(log.Data)) {
+		rows = append(rows, []string{key, log.Data[key]})
 	}
 
 	rows = append(rows, []string{"raw", log.Raw})
