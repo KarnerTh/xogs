@@ -229,8 +229,9 @@ in the display config or as input for a parser, but should never be mutated:
 | Go to the top                 | `g`               |
 | Go to the bottom (and follow) | `G`               |
 | Insert mode for filter        | `i`               |
-| Exit insert mode or details   | `esc`             |
+| Exit insert                   | `esc`             |
 | Open details                  | `enter`           |
+| Exit details                  | `esc`, `q`        |
 | Clear filter                  | `ctrl+x`          |
 | Exit xogs                     | `ctrl+c`          |
 
