@@ -37,13 +37,13 @@ func newLogList(displayConfig config.DisplayConfig, filter observer.Publisher[st
 
 	s := table.DefaultStyles()
 	s.Header = s.Header.
-		BorderStyle(lipgloss.NormalBorder()).
-		BorderForeground(lipgloss.Color("240")).
+		BorderStyle(lipgloss.ThickBorder()).
 		BorderBottom(true).
+		BorderTop(true).
 		Bold(true)
 	s.Selected = s.Selected.
 		Foreground(lipgloss.Color("229")).
-		Background(lipgloss.Color("57")).
+		Background(lipgloss.Color("240")).
 		Bold(false)
 	t.SetStyles(s)
 
@@ -66,7 +66,7 @@ func (m logListModel) Init() tea.Cmd {
 func (m logListModel) updateSizes(msg tea.WindowSizeMsg) logListModel {
 	m.width, m.height = msg.Width, msg.Height
 	m.table.SetWidth(m.width)
-	m.table.SetHeight(m.height - 4)
+	m.table.SetHeight(m.height - 5)
 	m.input.Width = m.width - 10
 
 	var cols = m.table.Columns()

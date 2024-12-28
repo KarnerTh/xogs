@@ -100,11 +100,11 @@ profiles:
           width: 0.1
           valueKey: "service"
         - title: level
-          width: 0.1
+          width: 0.05
           valueKey: level
         - title: timestamp
           width: 0.1
           valueKey: timestamp
-        - title: msg
-          width: 0.4
+        - title: message
+          width: 0.75
           valueKey: msg
