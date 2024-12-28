@@ -51,7 +51,7 @@ func newLogDetail(id string, window tea.WindowSizeMsg, repo aggregator.LogReposi
 	if err != nil {
 		viewport.SetContent(err.Error())
 	} else {
-		detailTable = getLogDetail(*log)
+		detailTable = getLogDetail(*log, window)
 		viewport.SetContent(detailTable.Render())
 	}
 
@@ -62,7 +62,7 @@ func newLogDetail(id string, window tea.WindowSizeMsg, repo aggregator.LogReposi
 	}
 }
 
-func getLogDetail(log aggregator.Log) *table.Table {
+func getLogDetail(log aggregator.Log, window tea.WindowSizeMsg) *table.Table {
 	rows := [][]string{
 		{"id", log.Id},
 	}
@@ -75,18 +75,19 @@ func getLogDetail(log aggregator.Log) *table.Table {
 
 	t := table.New().
 		Rows(rows...).
+		Border(lipgloss.HiddenBorder()).
 		StyleFunc(func(row, col int) lipgloss.Style {
 			switch {
 			case row%2 == 0:
 				if col == 0 {
 					return evenRowStyle.MaxWidth(keyColumMaxWidth)
 				}
-				return evenRowStyle
+				return evenRowStyle.Width(window.Width - keyColumMaxWidth)
 			default:
 				if col == 0 {
 					return oddRowStyle.MaxWidth(keyColumMaxWidth)
 				}
-				return oddRowStyle
+				return oddRowStyle.Width(window.Width - keyColumMaxWidth)
 			}
 		})
 

@@ -1,4 +1,4 @@
-defaultProfile: logfmt
+defaultProfile: logstash_with_prefix 
 profiles:
   - name: logfmt 
     parser: 
@@ -78,6 +78,8 @@ profiles:
               values:
                 - key: service
                   regex: '\[([^\]]+)\]'
+                - key: "@message"
+                  regex: '\[[^\]]+\]\s(.*)'
                 - key: log
                   regex: '\[[^\]]+\]\s(.*)'
         - inputKey: log
