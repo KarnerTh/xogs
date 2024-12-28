@@ -84,12 +84,12 @@ func getLogDetail(log aggregator.Log, window tea.WindowSizeMsg) *table.Table {
 				if col == 0 {
 					return evenRowStyle.MaxWidth(keyColumMaxWidth)
 				}
-				return evenRowStyle.Width(window.Width - keyColumMaxWidth)
+				return evenRowStyle
 			default:
 				if col == 0 {
 					return oddRowStyle.MaxWidth(keyColumMaxWidth)
 				}
-				return oddRowStyle.Width(window.Width - keyColumMaxWidth)
+				return oddRowStyle
 			}
 		})
 
