@@ -44,14 +44,14 @@ var DefaultProfile = Profile{
 }
 
 func Setup() Config {
+	viper.SetConfigName(".xogs")
+	viper.SetConfigType("yaml")
+	viper.AddConfigPath(".")
+
 	home, err := os.UserHomeDir()
 	if err == nil {
 		viper.AddConfigPath(home)
 	}
-
-	viper.AddConfigPath(".")
-	viper.SetConfigType("yaml")
-	viper.SetConfigName(".xogs")
 
 	if err = viper.ReadInConfig(); err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
