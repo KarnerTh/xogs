@@ -103,6 +103,9 @@ func (m logListModel) handleKeyPress(msg tea.KeyMsg) (logListModel, tea.Cmd, boo
 		} else {
 			cmd = func() tea.Msg { return logSelectedMsg{id: m.table.SelectedRow()[0]} }
 		}
+	case "ctrl+x":
+		m.input.SetValue("")
+		m.filterPublisher.Publish("")
 	case "up", "k", "down", "j", "g":
 		m.follow = false
 	case "end", "G":
