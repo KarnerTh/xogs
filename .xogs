@@ -1,8 +1,10 @@
 defaultProfile: logstash_with_prefix 
 profiles:
   - name: logfmt 
-    parser: 
-      logfmt: {}
+    pipeline:
+      processors:
+        - parser: 
+            logfmt: {}
     displayConfig:
       columns:
         - title: level
