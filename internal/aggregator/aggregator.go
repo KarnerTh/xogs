@@ -27,15 +27,15 @@ type LogRepository interface {
 }
 
 type Aggregator struct {
-	parser LineParser
-	repo   LogRepository
-	filter Filter
+	pipeline LineParser
+	repo     LogRepository
+	filter   Filter
 }
 
-func NewAggregator(lineParser LineParser, logRepository LogRepository) Aggregator {
+func NewAggregator(pipeline LineParser, logRepository LogRepository) Aggregator {
 	return Aggregator{
-		parser: lineParser,
-		repo:   logRepository,
+		pipeline: pipeline,
+		repo:     logRepository,
 	}
 }
 
@@ -48,7 +48,7 @@ func (a *Aggregator) Aggregate() (observer.Subscriber[Notification], observer.Pu
 			select {
 			case input := <-inputSubscription:
 				// TODO: handle error
-				log, _ := a.parser.Parse(input.Value)
+				log, _ := a.pipeline.Parse(input.Value)
 				a.repo.Add(*log)
 
 				if a.filter.Matches(*log) {
@@ -80,7 +80,7 @@ func (a *Aggregator) AggregateFile(path string) error {
 	for scanner.Scan() {
 		line := scanner.Text()
 		// TODO: handle error
-		log, _ := a.parser.Parse(line)
+		log, _ := a.pipeline.Parse(line)
 		a.repo.Add(*log)
 	}
 

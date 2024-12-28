@@ -85,6 +85,15 @@ profiles:
         - inputKey: log
           parser:
             json: {}
+        - inputKey: "@fields.level"
+          remapper:
+            targetKey: level
+        - inputKey: "@timestamp"
+          remapper:
+            targetKey: timestamp
+        - inputKey: "@message"
+          remapper:
+            targetKey: msg
     displayConfig:
       columns:
         - title: service
@@ -92,10 +101,10 @@ profiles:
           valueKey: "service"
         - title: level
           width: 0.1
-          valueKey: "@fields.level"
+          valueKey: level
         - title: timestamp
           width: 0.1
-          valueKey: "@timestamp"
+          valueKey: timestamp
         - title: msg
           width: 0.4
-          valueKey: "@message"
+          valueKey: msg

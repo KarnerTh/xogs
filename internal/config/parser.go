@@ -5,8 +5,13 @@ type Pipeline struct {
 }
 
 type Processor struct {
-	Parser   Parser
 	InputKey string
+	Parser   *Parser
+	Remapper *Remapper
+}
+
+type Remapper struct {
+	TargetKey string
 }
 
 type Parser struct {

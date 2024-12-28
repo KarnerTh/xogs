@@ -33,9 +33,9 @@ var rootCmd = &cobra.Command{
 		// }
 		// defer f.Close()
 
-		parser := parser.NewPipeline(profile.Pipeline)
+		pipeline := aggregator.NewPipeline(profile.Pipeline.Processors, parser.NewParserFactory())
 		logRepo := persistence.NewInMemory()
-		agg := aggregator.NewAggregator(parser, logRepo)
+		agg := aggregator.NewAggregator(pipeline, logRepo)
 		logSubscriber, filterPublisher := agg.Aggregate()
 		logSubscription := logSubscriber.Subscribe()
 

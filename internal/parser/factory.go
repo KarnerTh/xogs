@@ -5,11 +5,13 @@ import (
 	"github.com/KarnerTh/xogs/internal/config"
 )
 
-func NewPipeline(pipeline config.Pipeline) aggregator.LineParser {
-	return newPipeline(pipeline.Processors)
+type parserFactory struct{}
+
+func NewParserFactory() aggregator.ParserFactory {
+	return parserFactory{}
 }
 
-func getParser(parser config.Parser) aggregator.LineParser {
+func (f parserFactory) GetParser(parser config.Parser) aggregator.LineParser {
 	switch {
 	case parser.Regex != nil:
 		return newRegexParser(parser.Regex.Values)
