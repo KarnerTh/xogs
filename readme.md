@@ -1,5 +1,7 @@
 # xogs
 
+[![test](https://github.com/KarnerTh/xogs/actions/workflows/test.yaml/badge.svg)](https://github.com/KarnerTh/xogs/actions/workflows/test.yaml)
+
 xogs is a terminal-based tool designed to enhance the way you work with
 local logs. It streamlines log aggregation, inspection and filtering,
 enabling you to handle logs more effectively and focus on what matters.
