@@ -145,6 +145,7 @@ func (m logListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	input, cmd := m.input.Update(msg)
 	if input.Value() != m.input.Value() {
+		m.follow = true
 		m.filterPublisher.Publish(input.Value())
 	}
 	m.input = input
