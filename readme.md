@@ -7,6 +7,8 @@ enabling you to handle logs more effectively and focus on what matters.
 Whether you're debugging, monitoring, or just exploring log data,
 xogs provides useful tools without leaving your terminal.
 
+![image](https://github.com/user-attachments/assets/4b494d5c-81a6-4273-b07d-4608d1ee3773)
+
 Want to see what has changed? Take a look at
 the [Changelog](https://github.com/KarnerTh/xogs/blob/main/changelog.md)
 
@@ -26,16 +28,16 @@ to use it globally on your system, add the executable to your path.
 
 ## Features
 
-- Supports differnt formats through generic parsers (JSON, regex, logfmt)
+- Supports different formats through generic parsers (JSON, regex, logfmt)
 - Filter logs quickly - pinpoint relevant information
-- Focus on what is important - granular control of dislayed data
+- Focus on what is important - granular control of displayed data
 - Stream logs from stdin or analyse a file
 
 ## How does it work
 
 1. Setup your configuration by providing a display and pipeline config (see [Configuration](#configuration))
 2. Start aggregating your logs by either providing a file or piping data (see [Example usages](#example-usages))
-3. Enjoy your aggregated logs locally and start filterting and exploring ✨
+3. Enjoy your aggregated logs locally and start filtering and exploring ✨
 
 ## Parameters/Flags
 
