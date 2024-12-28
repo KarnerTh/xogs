@@ -27,7 +27,7 @@ type logListModel struct {
 func newLogList(displayConfig config.DisplayConfig, filter observer.Publisher[string]) logListModel {
 	columns := make([]table.Column, len(displayConfig.Columns))
 	for i, v := range displayConfig.Columns {
-		columns[i] = table.Column{Title: v.Title}
+		columns[i] = table.Column{Title: v.Title, Width: 1}
 	}
 
 	t := table.New(
@@ -66,10 +66,10 @@ func (m logListModel) Init() tea.Cmd {
 func (m logListModel) updateSizes(msg tea.WindowSizeMsg) logListModel {
 	m.width, m.height = msg.Width, msg.Height
 	m.table.SetWidth(m.width)
-	m.table.SetHeight(m.height - 5)
+	m.table.SetHeight(m.height - 3)
 	m.input.Width = m.width - 10
 
-	var cols = m.table.Columns()
+	cols := m.table.Columns()
 	for i, v := range cols {
 		v.Width = int(float32(m.width)*m.displayConfig.Columns[i].Width - 2)
 		cols[i] = v
@@ -174,9 +174,6 @@ func mapLogToRow(displayConfig config.DisplayConfig, log aggregator.Log) table.R
 
 func (m logListModel) View() string {
 	input := inputStyle.Width(m.width - 2).Render(m.input.View())
-	content := contentStyle.
-		Width(m.width).
-		Render(lipgloss.JoinHorizontal(lipgloss.Bottom, m.table.View()))
-
+	content := contentStyle.Render(m.table.View())
 	return lipgloss.JoinVertical(lipgloss.Top, content, input)
 }
