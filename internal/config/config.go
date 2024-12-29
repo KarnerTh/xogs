@@ -19,6 +19,10 @@ type Profile struct {
 }
 
 func (c Config) GetProfileByName(name string) (*Profile, error) {
+	if len(name) == 0 && len(c.Profiles) == 0 {
+		return &DefaultProfile, nil
+	}
+
 	for _, p := range c.Profiles {
 		if len(name) != 0 && p.Name == name {
 			return &p, nil
@@ -34,7 +38,7 @@ func (c Config) GetProfileByName(name string) (*Profile, error) {
 
 var DefaultProfile = Profile{
 	Name:     "default",
-	Pipeline: Pipeline{}, // TODO: sane default?
+	Pipeline: Pipeline{},
 	DisplayConfig: DisplayConfig{
 		Columns: []ColumnConfig{
 			{Title: "id", Width: 0, ValueKey: ValueKeyId},

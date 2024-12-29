@@ -1,7 +1,5 @@
 # prio:
 
-- test default logger
-
 # backlog:
 
 - logger? slog?
