@@ -1,3 +1,5 @@
+GIT_TAG := $(shell git describe --tags --abbrev=0)
+
 .PHONY: run
 run:
 	go run main.go
@@ -10,3 +12,7 @@ test:
 .PHONY: test-cleanup
 test-cleanup:
 	go clean -testcache
+
+.PHONY: publish
+publish:
+	GOPROXY=proxy.golang.org go list -m github.com/KarnerTh/xogs@$(GIT_TAG)
