@@ -13,6 +13,10 @@ test:
 test-cleanup:
 	go clean -testcache
 
+.PHONY: test-coverage
+test-coverage:
+	go test -cover -coverprofile=coverage.out ./...; go tool cover -html=coverage.out -o coverage.html; rm coverage.out
+
 .PHONY: publish
 publish:
 	GOPROXY=proxy.golang.org go list -m github.com/KarnerTh/xogs@$(GIT_TAG)
