@@ -9,7 +9,8 @@ enabling you to handle logs more effectively and focus on what matters.
 Whether you're debugging, monitoring, or just exploring log data,
 xogs provides useful tools without leaving your terminal.
 
-![image](https://github.com/user-attachments/assets/4b494d5c-81a6-4273-b07d-4608d1ee3773)
+https://github.com/user-attachments/assets/16075b08-aae4-4d1c-9c5c-a44f3d11c4ea
+
 
 Want to see what has changed? Take a look at
 the [Changelog](https://github.com/KarnerTh/xogs/blob/main/changelog.md)
