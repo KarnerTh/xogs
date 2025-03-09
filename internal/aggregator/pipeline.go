@@ -1,7 +1,6 @@
 package aggregator
 
 import (
-	"fmt"
 	"maps"
 
 	"github.com/KarnerTh/xogs/internal/config"
@@ -38,12 +37,11 @@ func (p pipeline) Parse(line string) (*Log, error) {
 			log, _ := parser.Parse(stepData)
 			maps.Copy(data, log.Data)
 		case processor.Remapper != nil:
-			if len(processor.InputKey) == 0 {
-				return nil, fmt.Errorf("remapper needs input key")
+			err := remap(data, processor.InputKey, *processor.Remapper)
+			if err != nil {
+				return nil, err
 			}
-			remap(data, processor.InputKey, *processor.Remapper)
 		}
-
 	}
 
 	return &Log{

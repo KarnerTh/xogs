@@ -14,6 +14,6 @@ var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: "Print the version of xogs",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Version 0.0.0")
+		fmt.Println("0.0.0")
 	},
 }

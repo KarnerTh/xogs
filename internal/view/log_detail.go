@@ -53,7 +53,7 @@ func newLogDetail(id string, window tea.WindowSizeMsg, repo aggregator.LogReposi
 	if err != nil {
 		viewport.SetContent(err.Error())
 	} else {
-		detailTable = getLogDetail(*log, window)
+		detailTable = getLogDetail(*log)
 		viewport.SetContent(detailTable.Render())
 	}
 
@@ -64,7 +64,7 @@ func newLogDetail(id string, window tea.WindowSizeMsg, repo aggregator.LogReposi
 	}
 }
 
-func getLogDetail(log aggregator.Log, window tea.WindowSizeMsg) *table.Table {
+func getLogDetail(log aggregator.Log) *table.Table {
 	rows := [][]string{
 		{"id", log.Id},
 	}

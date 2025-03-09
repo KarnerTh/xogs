@@ -1,6 +1,6 @@
 module github.com/KarnerTh/xogs
 
-go 1.23.1
+go 1.24
 
 require (
 	github.com/charmbracelet/bubbles v0.20.0

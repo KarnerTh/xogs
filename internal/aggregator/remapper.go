@@ -1,13 +1,22 @@
 package aggregator
 
-import "github.com/KarnerTh/xogs/internal/config"
+import (
+	"fmt"
 
-func remap(data map[string]string, inputKey string, config config.Remapper) {
+	"github.com/KarnerTh/xogs/internal/config"
+)
+
+func remap(data map[string]string, inputKey string, config config.Remapper) error {
+	if len(inputKey) == 0 {
+		return fmt.Errorf("remapper needs input key")
+	}
+
 	if data == nil {
-		return
+		return nil
 	}
 
 	value := data[inputKey]
 	delete(data, inputKey)
 	data[config.TargetKey] = value
+	return nil
 }

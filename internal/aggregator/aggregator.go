@@ -58,7 +58,7 @@ func (a *Aggregator) Aggregate() (observer.Subscriber[Notification], observer.Pu
 				a.filter = parseFilter(filter)
 				logList, err := a.repo.Get(a.filter)
 				if err != nil {
-					log.Printf(err.Error())
+					log.Print(err.Error())
 				}
 
 				logNotifier.Publish(Notification{BaseList: logList})
@@ -86,7 +86,7 @@ func (a *Aggregator) AggregateFile(path string) error {
 
 	logList, err := a.repo.Get(a.filter)
 	if err != nil {
-		log.Printf(err.Error())
+		log.Print(err.Error())
 	}
 
 	logNotifier.Publish(Notification{BaseList: logList})
