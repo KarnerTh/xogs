@@ -65,9 +65,7 @@ func newLogDetail(id string, window tea.WindowSizeMsg, repo aggregator.LogReposi
 }
 
 func getLogDetail(log aggregator.Log) *table.Table {
-	rows := [][]string{
-		{"id", log.Id},
-	}
+	rows := [][]string{}
 
 	for _, key := range slices.Sorted(maps.Keys(log.Data)) {
 		rows = append(rows, []string{key, log.Data[key]})
