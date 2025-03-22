@@ -11,8 +11,9 @@ type Processor struct {
 }
 
 type Remapper struct {
-	TargetKey  string
-	KeepSource bool
+	TargetKey          string
+	KeepSource         bool
+	OverrideOnConflict bool
 }
 
 type Parser struct {

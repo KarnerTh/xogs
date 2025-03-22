@@ -8,7 +8,9 @@ import (
 )
 
 func TestRemapper(t *testing.T) {
-	t.Run("default behavior", func(t *testing.T) {
+	t.Parallel()
+	t.Run("replace source", func(t *testing.T) {
+		t.Parallel()
 		// Arrange
 		data := map[string]string{"before": "testValue"}
 
@@ -22,6 +24,7 @@ func TestRemapper(t *testing.T) {
 	})
 
 	t.Run("keep source", func(t *testing.T) {
+		t.Parallel()
 		// Arrange
 		data := map[string]string{"before": "testValue"}
 
@@ -30,6 +33,30 @@ func TestRemapper(t *testing.T) {
 
 		// Assert
 		assert.Equal(t, "testValue", data["before"])
+		assert.Equal(t, "testValue", data["after"])
+	})
+
+	t.Run("do not override on conflict", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		data := map[string]string{"before": "testValue", "after": "already_set"}
+
+		// Act
+		remap(data, "before", config.Remapper{TargetKey: "after"})
+
+		// Assert
+		assert.Equal(t, "already_set", data["after"])
+	})
+
+	t.Run("override on conflict", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		data := map[string]string{"before": "testValue", "after": "already_set"}
+
+		// Act
+		remap(data, "before", config.Remapper{TargetKey: "after", OverrideOnConflict: true})
+
+		// Assert
 		assert.Equal(t, "testValue", data["after"])
 	})
 }

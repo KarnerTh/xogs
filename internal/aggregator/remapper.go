@@ -15,8 +15,11 @@ func remap(data map[string]string, inputKey string, config config.Remapper) erro
 		return nil
 	}
 
-	value := data[inputKey]
-	data[config.TargetKey] = value
+	if data[config.TargetKey] != "" && !config.OverrideOnConflict {
+		return nil
+	}
+
+	data[config.TargetKey] = data[inputKey]
 
 	if !config.KeepSource {
 		delete(data, inputKey)

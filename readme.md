@@ -162,6 +162,7 @@ profiles:
           remapper:
             targetKey: message # the target key where it should be remapped
             keepSource: true # source key is removed by default
+            overrideOnConflict: true # value does not get remapped by default if target already has a value
     displayConfig:
       columns:
         - title: level

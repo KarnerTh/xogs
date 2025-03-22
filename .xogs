@@ -97,6 +97,7 @@ profiles:
           remapper:
             targetKey: msg
             keepSource: true
+            overrideOnConflict: true
     displayConfig:
       columns:
         - title: service
