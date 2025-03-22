@@ -96,6 +96,7 @@ profiles:
         - inputKey: "@message"
           remapper:
             targetKey: msg
+            keepSource: true
     displayConfig:
       columns:
         - title: service

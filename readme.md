@@ -11,7 +11,6 @@ xogs provides useful tools without leaving your terminal.
 
 https://github.com/user-attachments/assets/16075b08-aae4-4d1c-9c5c-a44f3d11c4ea
 
-
 Want to see what has changed? Take a look at
 the [Changelog](https://github.com/KarnerTh/xogs/blob/main/changelog.md)
 
@@ -162,6 +161,7 @@ profiles:
         - inputKey: msg # the source key that should be remapped
           remapper:
             targetKey: message # the target key where it should be remapped
+            keepSource: true # source key is removed by default
     displayConfig:
       columns:
         - title: level

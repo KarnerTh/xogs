@@ -8,14 +8,28 @@ import (
 )
 
 func TestRemapper(t *testing.T) {
-	// Arrange
-	data := map[string]string{"before": "testValue"}
+	t.Run("default behavior", func(t *testing.T) {
+		// Arrange
+		data := map[string]string{"before": "testValue"}
 
-	// Act
-	remap(data, "before", config.Remapper{TargetKey: "after"})
+		// Act
+		remap(data, "before", config.Remapper{TargetKey: "after"})
 
-	// Assert
-	assert.Contains(t, data, "after")
-	assert.NotContains(t, data, "before")
-	assert.Equal(t, "testValue", data["after"])
+		// Assert
+		assert.Contains(t, data, "after")
+		assert.NotContains(t, data, "before")
+		assert.Equal(t, "testValue", data["after"])
+	})
+
+	t.Run("keep source", func(t *testing.T) {
+		// Arrange
+		data := map[string]string{"before": "testValue"}
+
+		// Act
+		remap(data, "before", config.Remapper{TargetKey: "after", KeepSource: true})
+
+		// Assert
+		assert.Equal(t, "testValue", data["before"])
+		assert.Equal(t, "testValue", data["after"])
+	})
 }

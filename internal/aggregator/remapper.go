@@ -16,7 +16,11 @@ func remap(data map[string]string, inputKey string, config config.Remapper) erro
 	}
 
 	value := data[inputKey]
-	delete(data, inputKey)
 	data[config.TargetKey] = value
+
+	if !config.KeepSource {
+		delete(data, inputKey)
+	}
+
 	return nil
 }
