@@ -99,6 +99,8 @@ profiles:
             keepSource: true
             overrideOnConflict: true
     displayConfig:
+      detail:
+        showRaw: true
       columns:
         - title: service
           width: 0.1

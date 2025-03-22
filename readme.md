@@ -60,6 +60,30 @@ and be project specific.
 
 Example configuration file can be found [here](https://github.com/KarnerTh/xogs/blob/main/.xogs)
 
+### Display config
+
+```yaml
+profiles:
+  - name: display_example
+    pipeline:
+      processors:
+        - parser:
+            json: {}
+    displayConfig:
+      detail:
+        showRaw: true # show the raw log line in the detail page
+      columns:
+        - title: level
+          width: 0.1 # the fraction of width the column should use (= 10%)
+          valueKey: level # the value key from the JSON log
+        - title: msg
+          width: 0.8
+          valueKey: msg
+        - title: nested
+          width: 0.1
+          valueKey: some.nested.data # also supports nested JSON keys
+```
+
 ### JSON parser
 
 Basic configuration example assuming your logs are in JSON format like
@@ -79,14 +103,14 @@ profiles:
     displayConfig:
       columns:
         - title: level
-          width: 0.1 # the fraction of width the column should use (= 10%)
-          valueKey: level # the value key from the JSON log
+          width: 0.1
+          valueKey: level
         - title: msg
-          width: 0.9
+          width: 0.8
           valueKey: msg
         - title: nested
           width: 0.1
-          valueKey: some.nested.data # also supports nested JSON keys
+          valueKey: some.nested.data
 ```
 
 ### Logfmt parser
@@ -105,8 +129,8 @@ profiles:
     displayConfig:
       columns:
         - title: level
-          width: 0.1 # the fraction of width the column should use (= 10%)
-          valueKey: level # the value key from the logfmt log
+          width: 0.1
+          valueKey: level
         - title: msg
           width: 0.8
           valueKey: msg
@@ -138,8 +162,8 @@ profiles:
     displayConfig:
       columns:
         - title: time
-          width: 0.1 # the fraction of width the column should use (= 10%)
-          valueKey: time # the value key from the regex mapping
+          width: 0.1
+          valueKey: time
         - title: ttl
           width: 0.1
           valueKey: ttl

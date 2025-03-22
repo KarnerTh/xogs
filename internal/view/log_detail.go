@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/KarnerTh/xogs/internal/aggregator"
+	"github.com/KarnerTh/xogs/internal/config"
 	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
@@ -39,12 +40,13 @@ var (
 
 type logDetailModel struct {
 	id            string
+	displayConfig config.DisplayConfig
 	width, height int
 	viewport      viewport.Model
 	table         *table.Table
 }
 
-func newLogDetail(id string, window tea.WindowSizeMsg, repo aggregator.LogRepository) logDetailModel {
+func newLogDetail(id string, displayConfig config.DisplayConfig, window tea.WindowSizeMsg, repo aggregator.LogRepository) logDetailModel {
 	var detailTable *table.Table
 	viewport := viewport.New(window.Width-widthPadding, window.Height-verticalMarginHeight)
 	viewport.YPosition = headerHeight
@@ -53,25 +55,28 @@ func newLogDetail(id string, window tea.WindowSizeMsg, repo aggregator.LogReposi
 	if err != nil {
 		viewport.SetContent(err.Error())
 	} else {
-		detailTable = getLogDetail(*log)
+		detailTable = getLogDetail(*log, displayConfig)
 		viewport.SetContent(detailTable.Render())
 	}
 
 	return logDetailModel{
-		id:       id,
-		viewport: viewport,
-		table:    detailTable,
+		id:            id,
+		displayConfig: displayConfig,
+		viewport:      viewport,
+		table:         detailTable,
 	}
 }
 
-func getLogDetail(log aggregator.Log) *table.Table {
+func getLogDetail(log aggregator.Log, displayConfig config.DisplayConfig) *table.Table {
 	rows := [][]string{}
 
 	for _, key := range slices.Sorted(maps.Keys(log.Data)) {
 		rows = append(rows, []string{key, log.Data[key]})
 	}
 
-	rows = append(rows, []string{"raw", log.Raw})
+	if displayConfig.Detail.ShowRaw {
+		rows = append(rows, []string{"raw", log.Raw})
+	}
 
 	t := table.New().
 		Rows(rows...).

@@ -9,10 +9,15 @@ const (
 
 type DisplayConfig struct {
 	Columns []ColumnConfig
+	Detail  DetailConfig
 }
 
 type ColumnConfig struct {
 	Title    string
 	Width    float32
 	ValueKey string
+}
+
+type DetailConfig struct {
+	ShowRaw bool
 }

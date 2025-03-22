@@ -15,12 +15,13 @@ const (
 )
 
 type rootModel struct {
-	curPageIdx  page
-	pages       []tea.Model
-	selectedLog *aggregator.Log
-	isQuitting  bool
-	window      tea.WindowSizeMsg
-	repo        aggregator.LogRepository
+	displayConfig config.DisplayConfig
+	curPageIdx    page
+	pages         []tea.Model
+	selectedLog   *aggregator.Log
+	isQuitting    bool
+	window        tea.WindowSizeMsg
+	repo          aggregator.LogRepository
 }
 
 func (m rootModel) Init() tea.Cmd {
@@ -44,7 +45,7 @@ func (m rootModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case aggregator.Notification:
 	case logSelectedMsg:
-		m.pages[detailPage] = newLogDetail(msg.id, m.window, m.repo)
+		m.pages[detailPage] = newLogDetail(msg.id, m.displayConfig, m.window, m.repo)
 		return m, func() tea.Msg { return pushPageMsg{pageIdx: detailPage} }
 	case pushPageMsg:
 		m.curPageIdx = msg.pageIdx
@@ -78,11 +79,12 @@ func (m rootModel) View() string {
 
 func CreateRootProgram(displayConfig config.DisplayConfig, filter observer.Publisher[string], repo aggregator.LogRepository) *tea.Program {
 	return tea.NewProgram(rootModel{
-		curPageIdx: logListPage,
-		repo:       repo,
+		displayConfig: displayConfig,
+		curPageIdx:    logListPage,
+		repo:          repo,
 		pages: []tea.Model{
 			newLogList(displayConfig, filter),
-			newLogDetail("", tea.WindowSizeMsg{}, repo),
+			newLogDetail("", displayConfig, tea.WindowSizeMsg{}, repo),
 		},
 	}, tea.WithAltScreen(), tea.WithMouseAllMotion())
 }
