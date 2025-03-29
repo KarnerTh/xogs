@@ -197,6 +197,34 @@ profiles:
           valueKey: message # we can now use the remapped key here
 ```
 
+### Formatter
+
+If you want to format a value you can use a formatter.
+In the following example, the `timestamp` value of the input will be formatted
+into a different time format. 
+
+```yaml
+profiles:
+  - name: json_example_with_formatter
+    pipeline:
+      processors:
+        - parser:
+            json: {}
+        - inputKey: timestamp # the source key that should be formatted
+          formatter:
+            time:
+              from: "2006-01-02T15:04:05.999999999Z07:00"
+              to: "15:04:05.999"
+    displayConfig:
+      columns:
+        - title: timestamp
+          width: 0.1
+          valueKey: timestamp
+        - title: msg
+          width: 0.9
+          valueKey: message
+```
+
 ### Combine multiple parser
 
 Sometimes log sources do not follow the same format for every log line

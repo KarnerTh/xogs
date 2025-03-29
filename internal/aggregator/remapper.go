@@ -11,10 +11,6 @@ func remap(data map[string]string, inputKey string, config config.Remapper) erro
 		return fmt.Errorf("remapper needs input key")
 	}
 
-	if data == nil {
-		return nil
-	}
-
 	if data[config.TargetKey] != "" && !config.OverrideOnConflict {
 		return nil
 	}

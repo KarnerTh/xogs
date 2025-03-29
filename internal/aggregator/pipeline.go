@@ -1,6 +1,7 @@
 package aggregator
 
 import (
+	"log/slog"
 	"maps"
 
 	"github.com/KarnerTh/xogs/internal/config"
@@ -39,7 +40,12 @@ func (p pipeline) Parse(line string) (*Log, error) {
 		case processor.Remapper != nil:
 			err := remap(data, processor.InputKey, *processor.Remapper)
 			if err != nil {
-				return nil, err
+				slog.Error("Remapping failed", slog.Any("error", err))
+			}
+		case processor.Formatter != nil:
+			err := format(data, processor.InputKey, *processor.Formatter)
+			if err != nil {
+				slog.Error("Formatting failed", slog.Any("error", err))
 			}
 		}
 	}

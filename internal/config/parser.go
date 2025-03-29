@@ -5,15 +5,25 @@ type Pipeline struct {
 }
 
 type Processor struct {
-	InputKey string
-	Parser   *Parser
-	Remapper *Remapper
+	InputKey  string
+	Parser    *Parser
+	Remapper  *Remapper
+	Formatter *Formatter
 }
 
 type Remapper struct {
 	TargetKey          string
 	KeepSource         bool
 	OverrideOnConflict bool
+}
+
+type Formatter struct {
+	Time *TimeFormater
+}
+
+type TimeFormater struct {
+	From string
+	To   string
 }
 
 type Parser struct {
