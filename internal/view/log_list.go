@@ -1,6 +1,8 @@
 package view
 
 import (
+	"fmt"
+
 	"github.com/KarnerTh/xogs/internal/aggregator"
 	"github.com/KarnerTh/xogs/internal/config"
 	"github.com/KarnerTh/xogs/internal/observer"
@@ -92,6 +94,7 @@ func (m logListModel) handleKeyPress(msg tea.KeyMsg) (logListModel, tea.Cmd, boo
 	case "i":
 		if m.table.Focused() {
 			m.table.Blur()
+			m.input.CursorEnd()
 			m.input.Focus()
 			preventPropergation = true
 			return m, nil, preventPropergation
@@ -135,6 +138,11 @@ func (m logListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 	case refreshMsg:
 		m.filterPublisher.Publish(m.input.Value())
+	case aggregator.FilterAddMsg:
+		filter := fmt.Sprintf("%s %s:%s", m.input.Value(), msg.Key, msg.Value)
+		m.input.SetValue(filter)
+		m.filterPublisher.Publish(filter)
+		return m, cmd
 	case tea.WindowSizeMsg:
 		m = m.updateSizes(msg)
 	case tea.KeyMsg:
@@ -160,11 +168,12 @@ func (m logListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func mapLogToRow(displayConfig config.DisplayConfig, log aggregator.Log) table.Row {
 	row := make(table.Row, len(displayConfig.Columns))
 	for i, v := range displayConfig.Columns {
-		if v.ValueKey == config.ValueKeyId {
+		switch v.ValueKey {
+		case config.ValueKeyId:
 			row[i] = log.Id
-		} else if v.ValueKey == config.ValueKeyRaw {
+		case config.ValueKeyRaw:
 			row[i] = log.Raw
-		} else {
+		default:
 			row[i] = log.Data[v.ValueKey]
 		}
 	}

@@ -54,6 +54,9 @@ func (m rootModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			// refresh log list as the page was not getting any events
 			return m, func() tea.Msg { return refreshMsg{} }
 		}
+	case aggregator.FilterAddMsg:
+		m.pages[0], cmd = m.pages[0].Update(msg)
+		return m, cmd
 	case tea.WindowSizeMsg:
 		m.window = msg
 	case tea.KeyMsg:

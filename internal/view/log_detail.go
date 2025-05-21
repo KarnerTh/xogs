@@ -24,8 +24,9 @@ var (
 )
 
 type keyMap struct {
-	copy  key.Binding
-	close key.Binding
+	copy   key.Binding
+	close  key.Binding
+	filter key.Binding
 }
 
 type logDetailModel struct {
@@ -103,6 +104,9 @@ func (m logDetailModel) handleKeyPress(msg tea.KeyMsg) (logDetailModel, tea.Cmd,
 	case key.Matches(msg, m.keyMap.copy):
 		value := m.table.SelectedRow()[1]
 		_ = clipboard.WriteAll(value)
+	case key.Matches(msg, m.keyMap.filter):
+		row := m.table.SelectedRow()
+		cmd = func() tea.Msg { return aggregator.FilterAddMsg{Key: row[0], Value: row[1]} }
 	case key.Matches(msg, m.keyMap.close):
 		return m, func() tea.Msg { return pushPageMsg{pageIdx: logListPage} }, preventPropergation
 	}
@@ -145,6 +149,10 @@ func defaultKeyMap() keyMap {
 			key.WithKeys("c"),
 			key.WithHelp("c", "copy to clipboard"),
 		),
+		filter: key.NewBinding(
+			key.WithKeys("f"),
+			key.WithHelp("f", "add filter"),
+		),
 		close: key.NewBinding(
 			key.WithKeys("q", "esc"),
 			key.WithHelp("q/esc", "close"),
@@ -153,11 +161,11 @@ func defaultKeyMap() keyMap {
 }
 
 func (km keyMap) ShortHelp() []key.Binding {
-	return []key.Binding{km.copy}
+	return []key.Binding{km.copy, km.filter}
 }
 
 func (km keyMap) FullHelp() [][]key.Binding {
-	return [][]key.Binding{{km.copy, km.close}}
+	return [][]key.Binding{{km.copy, km.filter, km.close}}
 }
 
 func (m logDetailModel) View() string {

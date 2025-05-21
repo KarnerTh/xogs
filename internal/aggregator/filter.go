@@ -7,6 +7,11 @@ type Filter struct {
 	DataTokens   map[string]string
 }
 
+type FilterAddMsg struct {
+	Key   string
+	Value string
+}
+
 func parseFilter(input string) Filter {
 	tokens := strings.Split(input, " ")
 	stringTokens := []string{}
