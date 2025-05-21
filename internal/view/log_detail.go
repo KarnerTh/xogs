@@ -5,6 +5,9 @@ import (
 
 	"github.com/KarnerTh/xogs/internal/aggregator"
 	"github.com/KarnerTh/xogs/internal/config"
+	"github.com/atotto/clipboard"
+	"github.com/charmbracelet/bubbles/help"
+	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/bubbles/table"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
@@ -20,11 +23,18 @@ var (
 	detailContentStyle = lipgloss.NewStyle().Padding(0, 1)
 )
 
+type keyMap struct {
+	copy  key.Binding
+	close key.Binding
+}
+
 type logDetailModel struct {
 	id            string
+	keyMap        keyMap
 	displayConfig config.DisplayConfig
 	width, height int
 	table         table.Model
+	help          help.Model
 }
 
 func newLogDetail(id string, displayConfig config.DisplayConfig, window tea.WindowSizeMsg, repo aggregator.LogRepository) logDetailModel {
@@ -53,8 +63,10 @@ func newLogDetail(id string, displayConfig config.DisplayConfig, window tea.Wind
 
 	return logDetailModel{
 		id:            id,
+		keyMap:        defaultKeyMap(),
 		displayConfig: displayConfig,
 		table:         t,
+		help:          help.New(),
 		width:         window.Width,
 		height:        window.Height,
 	}
@@ -87,8 +99,11 @@ func (m logDetailModel) handleKeyPress(msg tea.KeyMsg) (logDetailModel, tea.Cmd,
 	var cmd tea.Cmd
 	var preventPropergation bool
 
-	switch msg.String() {
-	case "esc", "q":
+	switch {
+	case key.Matches(msg, m.keyMap.copy):
+		value := m.table.SelectedRow()[1]
+		_ = clipboard.WriteAll(value)
+	case key.Matches(msg, m.keyMap.close):
 		return m, func() tea.Msg { return pushPageMsg{pageIdx: logListPage} }, preventPropergation
 	}
 
@@ -124,6 +139,27 @@ func (m logDetailModel) footerView() string {
 	return lipgloss.JoinHorizontal(lipgloss.Center, line)
 }
 
+func defaultKeyMap() keyMap {
+	return keyMap{
+		copy: key.NewBinding(
+			key.WithKeys("c"),
+			key.WithHelp("c", "copy to clipboard"),
+		),
+		close: key.NewBinding(
+			key.WithKeys("q", "esc"),
+			key.WithHelp("q/esc", "close"),
+		),
+	}
+}
+
+func (km keyMap) ShortHelp() []key.Binding {
+	return []key.Binding{km.copy}
+}
+
+func (km keyMap) FullHelp() [][]key.Binding {
+	return [][]key.Binding{{km.copy, km.close}}
+}
+
 func (m logDetailModel) View() string {
 	return detailContentStyle.Render(
 		lipgloss.JoinVertical(
@@ -131,6 +167,7 @@ func (m logDetailModel) View() string {
 			m.headerView(),
 			m.table.View(),
 			m.footerView(),
+			m.help.ShortHelpView(m.keyMap.ShortHelp()),
 		),
 	)
 }
