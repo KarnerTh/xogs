@@ -1,7 +1,9 @@
 package aggregator
 
+type LogData = map[string]string
+
 type Log struct {
 	Id   string
-	Data map[string]string
+	Data LogData
 	Raw  string
 }

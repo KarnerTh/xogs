@@ -42,10 +42,8 @@ var rootCmd = &cobra.Command{
 		p := view.CreateRootProgram(profile.DisplayConfig, filterPublisher, logRepo)
 		go func() {
 			for {
-				notification := <-logSubscription
-				p.Send(notification)
+				p.Send(<-logSubscription)
 			}
-
 		}()
 
 		// handle file argument
