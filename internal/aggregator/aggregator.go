@@ -49,7 +49,7 @@ func (a *Aggregator) Aggregate() (observer.Subscriber[Notification], observer.Pu
 			case input := <-inputSubscription:
 				// TODO: handle error
 				log, _ := a.pipeline.Parse(input.Value)
-				a.repo.Add(*log)
+				_ = a.repo.Add(*log)
 
 				if a.filter.Matches(*log) {
 					logNotifier.Publish(Notification{NewEntry: log})
@@ -74,14 +74,16 @@ func (a *Aggregator) AggregateFile(path string) error {
 	if err != nil {
 		return err
 	}
-	defer file.Close()
+	defer func() {
+		_ = file.Close()
+	}()
 
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		line := scanner.Text()
 		// TODO: handle error
 		log, _ := a.pipeline.Parse(line)
-		a.repo.Add(*log)
+		_ = a.repo.Add(*log)
 	}
 
 	logList, err := a.repo.Get(a.filter)

@@ -18,7 +18,7 @@ func newJsonParser() jsonParser {
 
 func (p jsonParser) Parse(line string) (*aggregator.Log, error) {
 	var parsed map[string]any
-	json.Unmarshal([]byte(line), &parsed)
+	_ = json.Unmarshal([]byte(line), &parsed)
 	data := parseMapValues(parsed, "")
 
 	return &aggregator.Log{

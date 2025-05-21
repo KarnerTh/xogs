@@ -35,5 +35,5 @@ func (r *inMemory) GetById(id string) (*aggregator.Log, error) {
 			return &log, nil
 		}
 	}
-	return nil, fmt.Errorf("Log with id %s not found", id)
+	return nil, fmt.Errorf("log with id %s not found", id)
 }

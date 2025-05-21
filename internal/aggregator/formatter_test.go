@@ -15,7 +15,7 @@ func TestFormatter(t *testing.T) {
 		data := map[string]string{"time": "2024-12-17T14:00:29.490Z"}
 
 		// Act
-		format(data, "time", config.Formatter{
+		err := format(data, "time", config.Formatter{
 			Time: &config.TimeFormater{
 				From: "2006-01-02T15:04:05.999999999Z07:00",
 				To:   "15:04:05",
@@ -23,6 +23,7 @@ func TestFormatter(t *testing.T) {
 		})
 
 		// Assert
+		assert.Nil(t, err)
 		assert.Equal(t, "14:00:29", data["time"])
 	})
 	t.Run("time formatter - invalid layout", func(t *testing.T) {
@@ -31,7 +32,7 @@ func TestFormatter(t *testing.T) {
 		data := map[string]string{"time": "2024-12-17T14:00:29.490Z"}
 
 		// Act
-		format(data, "time", config.Formatter{
+		err := format(data, "time", config.Formatter{
 			Time: &config.TimeFormater{
 				From: "XYZ",
 				To:   "15:04:05",
@@ -39,6 +40,7 @@ func TestFormatter(t *testing.T) {
 		})
 
 		// Assert
+		assert.NotNil(t, err)
 		assert.Equal(t, "2024-12-17T14:00:29.490Z", data["time"])
 	})
 }

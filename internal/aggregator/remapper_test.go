@@ -15,9 +15,10 @@ func TestRemapper(t *testing.T) {
 		data := map[string]string{"before": "testValue"}
 
 		// Act
-		remap(data, "before", config.Remapper{TargetKey: "after"})
+		err := remap(data, "before", config.Remapper{TargetKey: "after"})
 
 		// Assert
+		assert.Nil(t, err)
 		assert.Contains(t, data, "after")
 		assert.NotContains(t, data, "before")
 		assert.Equal(t, "testValue", data["after"])
@@ -29,9 +30,10 @@ func TestRemapper(t *testing.T) {
 		data := map[string]string{"before": "testValue"}
 
 		// Act
-		remap(data, "before", config.Remapper{TargetKey: "after", KeepSource: true})
+		err := remap(data, "before", config.Remapper{TargetKey: "after", KeepSource: true})
 
 		// Assert
+		assert.Nil(t, err)
 		assert.Equal(t, "testValue", data["before"])
 		assert.Equal(t, "testValue", data["after"])
 	})
@@ -42,9 +44,10 @@ func TestRemapper(t *testing.T) {
 		data := map[string]string{"before": "testValue", "after": "already_set"}
 
 		// Act
-		remap(data, "before", config.Remapper{TargetKey: "after"})
+		err := remap(data, "before", config.Remapper{TargetKey: "after"})
 
 		// Assert
+		assert.Nil(t, err)
 		assert.Equal(t, "already_set", data["after"])
 	})
 
@@ -54,9 +57,10 @@ func TestRemapper(t *testing.T) {
 		data := map[string]string{"before": "testValue", "after": "already_set"}
 
 		// Act
-		remap(data, "before", config.Remapper{TargetKey: "after", OverrideOnConflict: true})
+		err := remap(data, "before", config.Remapper{TargetKey: "after", OverrideOnConflict: true})
 
 		// Assert
+		assert.Nil(t, err)
 		assert.Equal(t, "testValue", data["after"])
 	})
 }

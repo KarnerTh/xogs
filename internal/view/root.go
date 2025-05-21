@@ -18,7 +18,6 @@ type rootModel struct {
 	displayConfig config.DisplayConfig
 	curPageIdx    page
 	pages         []tea.Model
-	selectedLog   *aggregator.Log
 	isQuitting    bool
 	window        tea.WindowSizeMsg
 	repo          aggregator.LogRepository
